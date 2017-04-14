@@ -9,9 +9,9 @@ algorithm
 align4
 align4-2players
 alphabet-sequence
+baby_wordprocessor
 babymatch
 babyshapes
-baby_wordprocessor
 balancebox
 ballcatch
 braille_alphabets
@@ -21,10 +21,10 @@ chess
 chess_2players
 chess_partyend
 chronos
-clickanddraw
-clickgame
 click_on_letter
 click_on_letter_up
+clickanddraw
+clickgame
 clockgame
 color_mix
 color_mix_light
@@ -103,6 +103,7 @@ paintings
 penalty
 photo_hunter
 planegame
+play_rhythm
 playpiano
 readingh
 readingv
