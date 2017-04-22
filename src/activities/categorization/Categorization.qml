@@ -34,16 +34,23 @@ ActivityBase {
     onStart: focus = true
     onStop: {}
 
-    property string boardsUrl: ":/gcompris/src/activities/categorization/resource/board/"
     property bool vert: background.width < background.height
+    property string type: "images"
+    property int categoriesCount
+    property string boardsUrl: ":/gcompris/src/activities/categorization/resource/board/"
 
-    pageComponent: Image {
+    pageComponent:
+    Image {
         id: background
         source: "qrc:/gcompris/src/activities/lang/resource/imageid-bg.svg"
         anchors.fill: parent
         sourceSize.width: parent.width
         signal start
         signal stop
+
+        property string locale: "system"
+        property bool englishFallback: false
+        property bool categoriesFallback: (items.categoriesCount == 6) ? true : false
 
         Component.onCompleted: {
             activity.start.connect(start)
@@ -70,11 +77,16 @@ ActivityBase {
             property var details
             property bool categoriesFallback
             property alias file: file
-            property var categories: directory.getFiles(boardsUrl)
+            property var categories: (type == "images") ? directory.getFiles(boardsUrl) : directory.getFiles(boardsUrl + locale + "/")
+            property alias locale: background.locale
+            property alias hintDialog: hintDialog
+            property var categoryTitle
+            property var categoryLesson
+            property bool hintDisplay
         }
 
         onStart: {
-            Activity.init(items, boardsUrl)
+            Activity.init(items, boardsUrl,type,categoriesCount)
             dialogActivityConfig.getInitialConfiguration()
             Activity.start()
         }
@@ -115,6 +127,12 @@ ActivityBase {
                     property alias easyModeBox: easyModeBox
                     property alias mediumModeBox: mediumModeBox
                     property alias expertModeBox: expertModeBox
+                    property alias localeBox: localeBox
+
+                    property alias availableLangs: langs.languages
+                    LanguageList {
+                        id: langs
+                    }
 
                     GCDialogCheckBox {
                         id: easyModeBox
@@ -157,6 +175,15 @@ ActivityBase {
                             }
                         }
                     }
+
+                    GCComboBox {
+                        id: localeBox
+                        model: langs.languages
+                        background: dialogActivityConfig
+                        width: dialogActivityConfig.width
+                        label: qsTr("Select your locale")
+                        visible: type == "words" ? true : false
+                    }
                 }
             }
             onLoadData: {
@@ -164,12 +191,43 @@ ActivityBase {
                     items.mode = dataToSave["mode"]
                 if(dataToSave && dataToSave["displayUpdateDialogAtStart"])
                     items.displayUpdateDialogAtStart = (dataToSave["displayUpdateDialogAtStart"] == "true") ? true : false
+                if(dataToSave && dataToSave['locale']) {
+                    background.locale = dataToSave["locale"];
+                }
             }
 
             onSaveData: {
-                dataToSave["data"] = Activity.categoriesToSavedProperties(dataToSave)
                 dataToSave["mode"] = items.mode
-                dataToSave["displayUpdateDialogAtStart"] = items.displayUpdateDialogAtStart ? "true" : "false"
+                var oldLocale = background.locale;
+                var newLocale =
+                        dialogActivityConfig.configItem.availableLangs[dialogActivityConfig.loader.item.localeBox.currentIndex].locale;
+                // Remove .UTF-8
+                if(newLocale.indexOf('.') != -1) {
+                    newLocale = newLocale.substring(0, newLocale.indexOf('.'))
+                }
+                dataToSave = {"locale": newLocale}
+
+                background.locale = newLocale;
+
+                // Restart the activity with new information
+                if(oldLocale !== newLocale) {
+                    background.stop();
+                    background.start();
+                }
+            }
+
+            function setDefaultValues() {
+                var localeUtf8 = background.locale;
+                if(background.locale != "system") {
+                    localeUtf8 += ".UTF-8";
+                }
+
+                for(var i = 0 ; i < dialogActivityConfig.configItem.availableLangs.length ; i ++) {
+                    if(dialogActivityConfig.configItem.availableLangs[i].locale === localeUtf8) {
+                        dialogActivityConfig.loader.item.localeBox.currentIndex = i;
+                        break;
+                    }
+                }
             }
             onClose: home()
         }
@@ -179,11 +237,20 @@ ActivityBase {
             onClose: home()
         }
 
+        DialogBackground {
+           id: hintDialog
+            visible: false
+            title: items.categoryTitle ? items.categoryTitle : ''
+            textBody: items.categoryLesson ? items.categoryLesson : ''
+            onClose: home()
+        }
+
         Bar {
             id: bar
-            content: menuScreen.started ? withConfig : withoutConfig
+            content: menuScreen.started ? withConfig : (items.hintDisplay == true ? withoutConfigWithHint : withoutConfigWithoutHint)
             property BarEnumContent withConfig: BarEnumContent { value: help | home | config }
-            property BarEnumContent withoutConfig: BarEnumContent { value: home | level }
+            property BarEnumContent withoutConfigWithHint: BarEnumContent { value: home | level | hint }
+            property BarEnumContent withoutConfigWithoutHint: BarEnumContent { value: home | level }
             onPreviousLevelClicked: Activity.previousLevel()
             onNextLevelClicked: Activity.nextLevel()
             onHelpClicked: {
@@ -197,7 +264,11 @@ ActivityBase {
             }
             onConfigClicked: {
                 dialogActivityConfig.active = true
+                dialogActivityConfig.setDefaultValues()
                 displayDialog(dialogActivityConfig)
+            }
+            onHintClicked: {
+                displayDialog(hintDialog)
             }
         }
 
@@ -221,7 +292,23 @@ ActivityBase {
             }
             anchors.fill: parent
             focus: true
-            active: items.categoriesFallback && items.displayUpdateDialogAtStart
+            active: items.categoriesFallback && items.displayUpdateDialogAtStart && type == "images"
+            onStatusChanged: if (status == Loader.Ready) item.start()
+        }
+
+        Loader {
+            id: englishFallbackDialog
+            sourceComponent: GCDialog {
+                parent: activity.main
+                message: qsTr("We are sorry, we don't have yet a translation for your language.") + " " +
+                         qsTr("GCompris is developed by the KDE community, you can translate GCompris by joining a translation team on <a href=\"%2\">%2</a>").arg("http://l10n.kde.org/") +
+                         "<br /> <br />" +
+                         qsTr("We switched to English for this activity but you can select another language in the configuration dialog.")
+                onClose: { background.englishFallback = false; items.locale = "en_GB"; Activity.getCategoriesList(); }
+            }
+            anchors.fill: parent
+            focus: true
+            active: background.englishFallback
             onStatusChanged: if (status == Loader.Ready) item.start()
         }
     }

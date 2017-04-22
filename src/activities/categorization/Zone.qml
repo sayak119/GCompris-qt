@@ -20,16 +20,65 @@
  */
 import QtQuick 2.1
 import GCompris 1.0
+import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.1
 
 import "../../core"
 import "categorization.js" as Activity
 
-Flow {
-    id: zoneFlow
-    width: parent.width/3
-    height: parent.height
+// Flickable {
+//     id: flick
+//     contentWidth: repeater.width
+//     contentHeight: repeater.height
+// //     visibleChildren: [image]
+
+//     clip: false
+//     interactive: true
+//     flickableDirection: Flickable.VerticalFlick
+//
+   ScrollView {
+    id: scroll
+        width: zoneFlow.width
+    height: zoneFlow.height
+//     visibleChildren: [image]
     property alias repeater: repeater
     property alias model: zoneModel
+    property alias spacing: zoneFlow.spacing
+
+   horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+       style: ScrollViewStyle {
+        handle: Rectangle {
+            implicitWidth: middleScreen.width * 0.03
+            implicitHeight: middleScreen.height - items.bar.height
+            color: "#696969"
+            visible: type == "words" ? true : false
+        }
+        scrollBarBackground: Rectangle {
+            implicitWidth: middleScreen.width * 0.03
+            implicitHeight: middleScreen.height - items.bar.height
+            color: "#DCDCDC"
+            visible: type == "words" ? true : false
+        }
+        decrementControl: Image {
+            source: "qrc:/gcompris/src/core/resource/scroll_up.svg";
+            width: middleScreen.width * 0.1
+            height: middleScreen.height * 0.05
+            visible: type == "words" ? true : false
+        }
+        incrementControl: Image {
+            source: "qrc:/gcompris/src/core/resource/scroll_down.svg";
+            width: middleScreen.width * 0.1
+            height: middleScreen.height * 0.05
+        }
+    }
+
+    Flow {
+    id: zoneFlow
+    spacing: 5
+    width: categoryBackground.width/3
+    height: categoryBackground.height
+    opacity: 1
+//     property alias interactive: scroll.interactive
 
     ListModel {
         id: zoneModel
@@ -40,78 +89,55 @@ Flow {
         model: zoneModel
         Item {
             id: item
-            width: middleScreen.width*0.32
-            height: categoryBackground.height * 0.2
+            width: (type == "words" && (items.hintDisplay == true)) ? middleScreen.width * 0.92 : middleScreen.width * 0.32
+            height: (type == "words" && (items.hintDisplay == true)) ? categoryBackground.height * 0.1 : categoryBackground.height * 0.2
+            visible: true
             opacity: 1
+
+            Rectangle {
+                id: wordBox
+                color: "black"
+                visible: type =="words" ? true : false
+                width: parent.width
+                height: parent.height
+                z: 3
+                focus: true
+                radius: 10
+                border.width: 2
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#000" }
+                    GradientStop { position: 0.9; color: "#666" }
+                    GradientStop { position: 1.0; color: "#AAA" }
+                }
+                GCText {
+                    id: wordBoxText
+                    text: name
+                    anchors.fill: parent
+                    anchors.bottom: parent.bottom
+                    fontSizeMode: Text.Fit
+                    wrapMode: Text.WordWrap
+                    z: 3
+                    color: "white"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+                DragList {
+                    id: wordDrag
+                    anchors.fill: parent
+                }
+            }
             Image {
                 id: image
                 width: middleScreen.width*0.28
                 height: categoryBackground.height * 0.15
-                source: name
-                MultiPointTouchArea {
-                    id: dragArea
+                source: (type == "images") ? name : ''
+                visible: type =="words" ? false : true
+                DragList {
+                    id: imageDrag
                     anchors.fill: parent
-                    touchPoints: [ TouchPoint { id: point1 } ]
-                    property real positionX
-                    property real positionY
-                    property real lastX
-                    property real lastY
-                    property bool isRight: isRight
-                    property string currPosition: "middle"
-                    property string imageSource: image.source.toString()
-
-                    onPressed: {
-                        items.instructionsVisible = false
-                        positionX = point1.x
-                        positionY = point1.y
-                        var imagePos = image.mapToItem(null,0,0)
-                        if(Activity.isDragInLeftArea(leftScreen.width, imagePos.x + parent.width)) {
-                            currPosition = "left"
-                        }
-                        else if(Activity.isDragInRightArea(middleScreen.width + leftScreen.width,imagePos.x)) {
-                            currPosition = "right"
-                        }
-                        else
-                            currPosition = "middle"
-                    }
-
-                    onUpdated: {
-                        var moveX = point1.x - positionX
-                        var moveY = point1.y - positionY
-                        parent.x = parent.x + moveX
-                        parent.y = parent.y + moveY
-                        var imagePos = image.mapToItem(null,0,0)
-                        leftAreaContainsDrag = Activity.isDragInLeftArea(leftScreen.width, imagePos.x + parent.width)
-                        rightAreaContainsDrag = Activity.isDragInRightArea(middleScreen.width + leftScreen.width,imagePos.x)
-                        lastX = 0, lastY = 0
-                    }
-
-                    onReleased: {
-                        var droppedPosition = "middle";
-                        if(lastX == point1.x && lastY == point1.y)
-                            return;
-                        else if(leftAreaContainsDrag)
-                            droppedPosition = "left"
-                        else if(rightAreaContainsDrag)
-                            droppedPosition = "right"
-
-                        // If we drop on same zone, we move it at its initial place
-                        if(currPosition == droppedPosition) {
-                            image.x = 0
-                            image.y = 0
-                        }
-                        else {
-                            Activity.dropControl(currPosition, droppedPosition, imageSource, index)
-                            image.source = ""
-                        }
-
-                        Activity.setValues()
-                        lastX = point1.x
-                        lastY = point1.y
-                    }
                 }
             }
         }
     }
 }
-
+}
