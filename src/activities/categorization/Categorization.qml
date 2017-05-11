@@ -247,7 +247,7 @@ ActivityBase {
 
         Bar {
             id: bar
-            content: menuScreen.started ? withConfig : (items.hintDisplay == true ? withoutConfigWithHint : withoutConfigWithoutHint)
+            content: menuScreen.started ? withConfig : (items.hintDisplay == true && items.mode != "expert" ? withoutConfigWithHint : withoutConfigWithoutHint)
             property BarEnumContent withConfig: BarEnumContent { value: help | home | config }
             property BarEnumContent withoutConfigWithHint: BarEnumContent { value: home | level | hint }
             property BarEnumContent withoutConfigWithoutHint: BarEnumContent { value: home | level }

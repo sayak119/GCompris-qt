@@ -51,19 +51,19 @@ import "categorization.js" as Activity
             implicitWidth: middleScreen.width * 0.03
             implicitHeight: middleScreen.height - items.bar.height
             color: "#696969"
-            visible: type == "words" ? true : false
+            visible: true
         }
         scrollBarBackground: Rectangle {
             implicitWidth: middleScreen.width * 0.03
             implicitHeight: middleScreen.height - items.bar.height
             color: "#DCDCDC"
-            visible: type == "words" ? true : false
+            visible: true
         }
         decrementControl: Image {
             source: "qrc:/gcompris/src/core/resource/scroll_up.svg";
             width: middleScreen.width * 0.1
             height: middleScreen.height * 0.05
-            visible: type == "words" ? true : false
+            visible: true
         }
         incrementControl: Image {
             source: "qrc:/gcompris/src/core/resource/scroll_down.svg";

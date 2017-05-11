@@ -70,6 +70,7 @@ function getCategoriesList() {
     categoryLists = items.categories
     var isEmbeddedMode = items.file.exists(fileName) ? true : false
     items.categoriesFallback = isEmbeddedMode
+    print(items.locale)
     for(var i = 0; i < categoryLists.length; i++) {
         categoriesFilename = (type == "words") ? "qrc" + boardsUrl + items.locale + "/" + categoryLists[i] : "qrc" +
         boardsUrl + categoryLists[i]
