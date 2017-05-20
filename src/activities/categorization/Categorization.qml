@@ -197,6 +197,7 @@ ActivityBase {
             }
 
             onSaveData: {
+                dataToSave["data"] = Activity.categoriesToSavedProperties(dataToSave)
                 dataToSave["mode"] = items.mode
                 var oldLocale = background.locale;
                 var newLocale =

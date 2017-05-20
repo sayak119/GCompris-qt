@@ -26,59 +26,27 @@ import QtQuick.Controls.Styles 1.1
 import "../../core"
 import "categorization.js" as Activity
 
-// Flickable {
-//     id: flick
-//     contentWidth: repeater.width
-//     contentHeight: repeater.height
-// //     visibleChildren: [image]
 
-//     clip: false
-//     interactive: true
-//     flickableDirection: Flickable.VerticalFlick
-//
-   ScrollView {
-    id: scroll
-        width: zoneFlow.width
-    height: zoneFlow.height
-//     visibleChildren: [image]
+Flickable {
+    id: flick
+    contentWidth: zoneFlow.width
+    contentHeight: zoneFlow.height
+
+    clip: false
+    interactive: (type == "words" ? true : false)
+    flickableDirection: Flickable.VerticalFlick
+
     property alias repeater: repeater
     property alias model: zoneModel
     property alias spacing: zoneFlow.spacing
-
-   horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-       style: ScrollViewStyle {
-        handle: Rectangle {
-            implicitWidth: middleScreen.width * 0.03
-            implicitHeight: middleScreen.height - items.bar.height
-            color: "#696969"
-            visible: true
-        }
-        scrollBarBackground: Rectangle {
-            implicitWidth: middleScreen.width * 0.03
-            implicitHeight: middleScreen.height - items.bar.height
-            color: "#DCDCDC"
-            visible: true
-        }
-        decrementControl: Image {
-            source: "qrc:/gcompris/src/core/resource/scroll_up.svg";
-            width: middleScreen.width * 0.1
-            height: middleScreen.height * 0.05
-            visible: true
-        }
-        incrementControl: Image {
-            source: "qrc:/gcompris/src/core/resource/scroll_down.svg";
-            width: middleScreen.width * 0.1
-            height: middleScreen.height * 0.05
-        }
-    }
 
     Flow {
     id: zoneFlow
     spacing: 5
     width: categoryBackground.width/3
-    height: categoryBackground.height
+    height: repeater.contentHeight
     opacity: 1
-//     property alias interactive: scroll.interactive
+    anchors.bottomMargin: 0.3 * zoneFlow.height
 
     ListModel {
         id: zoneModel
@@ -139,5 +107,5 @@ import "categorization.js" as Activity
             }
         }
     }
-}
+    }
 }

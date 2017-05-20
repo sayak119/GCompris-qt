@@ -103,6 +103,7 @@ function addPropertiesToCategories(categories) {
 function categoriesToSavedProperties() {
     var props = {}
     for(var i = 0; i < items.menuModel.count; i++) {
+        var category = items.menuModel.get(i)
         props[category.name] = {
             'favorite': category['favorite']
         }

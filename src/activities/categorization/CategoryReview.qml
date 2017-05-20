@@ -59,7 +59,6 @@ Item {
             x: 0.015 * parent.width
             z: 2
             y: 0.05 * parent.height
-           // anchors.topMargin: 0.2 * categoryBackground.height
         }
 
         Rectangle {
@@ -147,13 +146,13 @@ Item {
         Image {
             id: categoryImage
             source: items.details && items.details[bar.level-1] && items.details[bar.level-1].image && type == "images" ? items.details[bar.level-1].image : ""
-            width: horizontalLayout ? rightZone.width * 0.35 : rightZone.width * 0.35
-            height: horizontalLayout ? rightZone.height * 0.18 : rightZone.height * 0.15
-            y: 0.015*parent.height
+            width: horizontalLayout ? middleScreen.width * 0.35 : rightScreen.width * 0.35
+            height: horizontalLayout ? rightScreen.height * 0.18 : rightScreen.height * 0.15
+            y: 0.015 * parent.height
             visible: items.categoryImageChecked && type == "images"
             anchors {
                 left: middleScreen.right
-                leftMargin: 0.15 * rightZone.width
+                leftMargin: 0.15 * rightScreen.width
             }
         }
 
@@ -161,11 +160,11 @@ Item {
             id: categoryTextBox
             color: "black"
             opacity: type == "words" ? 1 : 0
-            width: horizontalLayout ? rightZone.width * 0.35 : rightZone.width * 0.35
-            height: horizontalLayout ? rightZone.height * 0.18 : rightZone.height * 0.15
+            width: horizontalLayout ? rightScreen.width * 0.35 : rightScreen.width * 0.35
+            height: horizontalLayout ? rightScreen.height * 0.18 : rightScreen.height * 0.15
             anchors {
                 left: middleScreen.right
-                leftMargin: 0.15 * rightZone.width
+                leftMargin: 0.15 * rightScreen.width
             }
             z: 3
             y: 0.015*parent.height
@@ -194,8 +193,8 @@ Item {
         BarButton {
             id: validate
             source: "qrc:/gcompris/src/core/resource/bar_ok.svg"
-            width: horizontalLayout ? rightZone.width * 0.20 : rightZone.width * 0.35
-            height: horizontalLayout ? rightZone.width * 0.20 : rightZone.width * 0.35
+            width: horizontalLayout ? rightScreen.width * 0.20 : rightScreen.width * 0.35
+            height: horizontalLayout ? rightScreen.width * 0.20 : rightScreen.width * 0.35
             y: parent.height*0.8
             z: 2
             anchors {

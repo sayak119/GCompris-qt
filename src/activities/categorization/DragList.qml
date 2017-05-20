@@ -35,8 +35,8 @@ MultiPointTouchArea {
     property real lastY
     property bool isRight: isRight
     property string currPosition: "middle"
-
     onPressed: {
+        interactive = false
         items.instructionsVisible = false
         positionX = point1.x
         positionY = point1.y
@@ -61,6 +61,7 @@ MultiPointTouchArea {
     }
 
     onReleased: {
+        interactive = (type == "words" ? true: false)
         var droppedPosition = "middle";
         if(lastX == point1.x && lastY == point1.y)
             return;
