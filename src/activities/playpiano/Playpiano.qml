@@ -94,8 +94,8 @@ ActivityBase {
         }*/
 
         Grid {
+            id: pianoGrid
             columns: 2
-            anchors.fill: parent
             MultipleStaff {
                 id: staff1
                 width: 300
@@ -117,12 +117,12 @@ ActivityBase {
             }
             Piano {
                 id: piano
-                width: 500
-                height: 300
+                width: background.width * 0.5
+                height: background.height * 0.5
                 onNoteClicked: {
                     onlyNote.value = note;
                     staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/'+'bass'+'_pitches/'+currentType+'/'+note+'.wav';
+                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
                     print(noteToPlay);
                     items.audioEffects.play(noteToPlay);
                 }
@@ -134,8 +134,9 @@ ActivityBase {
                 width: 40
                 height: 40
             }
-
+        }
             Row {
+                id: optionsRow
                 Image {
                     source: "qrc:/gcompris/src/activities/playpiano/resource/whole-note.svg"
                     sourceSize.width: 50
@@ -203,10 +204,11 @@ ActivityBase {
             GCText {
                 text: qsTr("Change accidental style")
             }
+
             Image {
                 source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/playpiano/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/playpiano/resource/blackflat.svg"
             }
-        }
+
         function loadMelody() {
             var data = Dataset.get();
             var selectedMusic = data.filter(function(item) { return item.title === 'Frère jacques'; });
