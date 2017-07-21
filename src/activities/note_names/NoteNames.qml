@@ -39,6 +39,7 @@ ActivityBase {
         color: "#ABCDEF"
 
         property bool keyboardMode: false
+        property bool horizontalLayout: background.width > background.height ? true : false
 
         signal start
         signal stop
@@ -64,46 +65,161 @@ ActivityBase {
         onStart: { Activity.start(items) }
         onStop: { Activity.stop() }
 
-        GCText {
-            id: staffText
-            visible: bar.level == 1 || bar.level == 11
-            height: background.height / 5
-            width: background.width / 1.5
+        Rectangle {
+            id: instructionBox
+            radius: 10
+            width: background.width / 1.9
+            height: horizontalLayout ? background.height / 5 : background.height / 4
             anchors.horizontalCenter: parent.horizontalCenter
-            fontSizeMode: Text.Fit
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode: Text.WordWrap
-            text: bar.level == 1 ? qsTr("These are the eight basic notes in treble clef. They form the C Major Scale.") :
-                                   qsTr("These are the eight basic notes in bass clef. They also form the C Major Scale. Notice that the note positions are different than in treble clef.")
+            opacity: 0.8
+            border.width: 6
+            color: "white"
+            border.color: "#87A6DD"
+
+            GCText {
+                id: instructionText
+                visible: !staffText.visible
+                color: "black"
+                z: 3
+                anchors.fill: parent
+                fontSizeMode: Text.Fit
+                horizontalAlignment: Text.AlignHCenter
+                wrapMode: Text.WordWrap
+                text: [2, 3, 4, 12, 13, 14].indexOf(bar.level) !== -1 ?
+                    qsTr("Click on the note name to match the pitch. Then click OK to check.") :
+                    [5, 6, 7, 15, 16, 17].indexOf(bar.level) !== -1 ?
+                        qsTr("Now there are sharp notes. These pitches are raised a half step.") :
+                        // [8, 9, 10, 18, 19, 20]
+                        qsTr("Now there are flat notes. These pitches are lowered a half step.")
+            }
+
+            GCText {
+                id: staffText
+                visible: bar.level == 1 || bar.level == 11
+                height: background.height / 5
+                width: background.width / 1.5
+                z: 3
+                color: "black"
+                anchors.horizontalCenter: parent.horizontalCenter
+                fontSizeMode: Text.Fit
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                wrapMode: Text.WordWrap
+                text: bar.level == 1 ? qsTr("These are the eight basic notes in treble clef. They form the C Major Scale.") :
+                                       qsTr("These are the eight basic notes in bass clef. They also form the C Major Scale. Notice that the note positions are different than in treble clef.")
+            }
         }
 
-        GCText {
-            id: instructionText
-            visible: !staffText.visible
-            height: background.height / 4
-            width: background.width / 2
-            anchors.horizontalCenter: parent.horizontalCenter
-            fontSizeMode: Text.Fit
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode: Text.WordWrap
-            text: [2, 3, 4, 12, 13, 14].indexOf(bar.level) !== -1 ?
-                qsTr("Click on the note name to match the pitch. Then click OK to check.") :
-                [5, 6, 7, 15, 16, 17].indexOf(bar.level) !== -1 ?
-                qsTr("Now there are sharp notes. These pitches are raised a half step.") :
-                 // [8, 9, 10, 18, 19, 20]
-                qsTr("Now there are flat notes. These pitches are lowered a half step.")
-        }
-
-        Button {
+        Rectangle {
             id: playScaleButton
-            style: GCButtonStyle {}
+            width: parent.width / 6
             height: 30 * ApplicationInfo.ratio
-            width: parent.width / 3
-            anchors.top: staffText.bottom
+            color: "#d8ffffff"
+            border.color: "#2a2a2a"
+            border.width: 3
+            radius: 8
+            z: 5
+            anchors.top: instructionBox.bottom
+            anchors.topMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr("Play Scale")
-            onClicked: staff.play()
             visible: bar.level == 1 || bar.level == 11
+
+            GCText {
+                id: playScaleButtonText
+                anchors.centerIn: parent
+                text: qsTr("Play scale")
+                wrapMode: Text.WordWrap
+            }
+
+            MouseArea {
+                id: playScaleButtonArea
+                anchors.fill: parent
+                onClicked: {
+                    staff.play()
+                }
+            }
+            states: [
+                State {
+                    name: "notclicked"
+                    PropertyChanges {
+                        target: playScaleButton
+                        scale: 1.0
+                    }
+                },
+                State {
+                    name: "clicked"
+                    when: button_area.pressed
+                    PropertyChanges {
+                        target: playScaleButton
+                        scale: 0.9
+                    }
+                },
+                State {
+                    name: "hover"
+                    when: nextButtonArea.containsMouse
+                    PropertyChanges {
+                        target: playScaleButton
+                        scale: 1.1
+                    }
+                }
+            ]
+            Behavior on scale { NumberAnimation { duration: 70 } }
+        }
+
+        Rectangle {
+            id: playButton
+            width: parent.width / 6
+            height: 30 * ApplicationInfo.ratio
+            color: "#d8ffffff"
+            border.color: "#2a2a2a"
+            border.width: 3
+            radius: 8
+            z: 5
+            anchors.top: instructionBox.bottom
+            anchors.topMargin: 15
+            anchors.left: playScaleButton.right
+            visible: bar.level == 1 || bar.level == 11
+
+            GCText {
+                id: playButtonText
+                anchors.centerIn: parent
+                text: qsTr("Play")
+                wrapMode: Text.WordWrap
+            }
+
+            MouseArea {
+                id: playButtonArea
+                anchors.fill: parent
+                onClicked: {
+                    Activity.nextLevel()
+                }
+            }
+            states: [
+                State {
+                    name: "notclicked"
+                    PropertyChanges {
+                        target: playButton
+                        scale: 1.0
+                    }
+                },
+                State {
+                    name: "clicked"
+                    when: button_area.pressed
+                    PropertyChanges {
+                        target: playButton
+                        scale: 0.9
+                    }
+                },
+                State {
+                    name: "hover"
+                    when: nextButtonArea.containsMouse
+                    PropertyChanges {
+                        target: playScaleButton
+                        scale: 1.1
+                    }
+                }
+            ]
+            Behavior on scale { NumberAnimation { duration: 70 } }
         }
 
         MultipleStaff {
@@ -143,55 +259,58 @@ ActivityBase {
         ListModel {
             id: gridRepeater
         }
+
         GridView {
             id: grid
             visible: instructionText.visible
-            anchors.left: staff.right
-            anchors.right: background.right
-            anchors.leftMargin: 15 * ApplicationInfo.ratio
-            anchors.rightMargin: 50 * ApplicationInfo.ratio
-            anchors.top: playScaleButton.bottom
+            anchors: {
+                left: staff.right
+                right: background.right
+                leftMargin: 15 * ApplicationInfo.ratio
+                rightMargin: 50 * ApplicationInfo.ratio
+                top: playScaleButton.bottom
+            }
             keyNavigationWraps: true
-
             interactive: false
             model: gridRepeater
-            cellWidth: itemWidth+10
-            cellHeight: itemHeight+10
-
+            cellWidth: itemWidth + 10
+            cellHeight: itemHeight + 10
             height: staff.height
 
             property int itemWidth: 60
             property int itemHeight: itemWidth
 
             delegate: Rectangle {
-                    id: noteRectangle
-                    color: staff.noteIsColored ? dummyNote.noteColorMap[note] : "white"
-                    width: grid.itemWidth
-                    height: grid.itemHeight
-                    radius: width / 5
-                    border.color: "black"
-                    GCText {
-                        id: noteText
-                        text: parseInt(note) > 0 ? dummyNote.whiteNoteName[note] : dummyNote.blackNoteName[note]
-                        anchors.centerIn: parent
-                        fontSizeMode: Text.Fit
-                        horizontalAlignment: Text.AlignHCenter
-                    }
+                id: noteRectangle
+                color: staff.noteIsColored ? dummyNote.noteColorMap[note] : "white"
+                width: grid.itemWidth
+                height: grid.itemHeight
+                radius: width / 5
+                border.color: "black"
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: select();
-                    }
-
-                    function select() {
-                        okButton.currentAnswer = note
-                    }
+                GCText {
+                    id: noteText
+                    text: parseInt(note) > 0 ? dummyNote.whiteNoteName[note] : dummyNote.blackNoteName[note]
+                    anchors.centerIn: parent
+                    fontSizeMode: Text.Fit
+                    horizontalAlignment: Text.AlignHCenter
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: select();
+                }
+
+                function select() {
+                    okButton.currentAnswer = note
+                }
+            }
+
             highlight: Rectangle {
                 id: noteHighlight
                 width: grid.cellWidth
                 height: grid.cellHeight
-                radius: width/2
+                radius: width / 2
                 border.width: 2
                 visible: true
             }
@@ -209,11 +328,12 @@ ActivityBase {
             id: okButton
             visible: instructionText.visible
             source:"qrc:/gcompris/src/core/resource/bar_ok.svg"
-            sourceSize.width: 60
-            fillMode: Image.PreserveAspectFit
-            anchors.left: grid.right
-            anchors.verticalCenter: staff.verticalCenter
-            anchors.margins: 10 * ApplicationInfo.ratio
+            width: parent.width * 0.1
+            height: parent.width * 0.1
+            anchors.right: background.right
+            anchors.bottom: score.top
+            anchors.bottomMargin: 20
+            anchors.rightMargin: 20
             property string currentAnswer: ""
             MouseArea {
                 anchors.fill: parent
