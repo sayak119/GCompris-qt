@@ -50,7 +50,7 @@ function initLevel() {
     if(items.bar.level === 1 || items.bar.level === 11) {
         //items.staff.displayNoteLabel(true);
         for(var i = 0 ; i < 8 ; ++ i) {
-            items.staff.addNote(""+(i+1), 4, "", true);
+            items.staff.addNote("" + (i + 1), 4, "", true);
         }
     }
     else {
@@ -60,7 +60,7 @@ function initLevel() {
             for(var i = 0 ; i < notes.length ; ++ i) {
                 items.gridRepeater.append({"note": notes[i]});
             }
-            notesToFind = Core.shuffle(notes);
+            notesToFind = Core.shuffle(notes)
         }
         else {
             var notes = Core.shuffle(["1", "2", "3", "4", "5", "6", "7"]);
@@ -68,6 +68,9 @@ function initLevel() {
                 items.gridRepeater.append({"note": notes[i]});
             }
             notesToFind = Core.shuffle(notes);
+            var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav';
+            items.audioEffects.play(noteToPlay);
+            print(notesToFind[items.score.currentSubLevel - 1])
         }
         items.staff.addNote(notesToFind[items.score.currentSubLevel-1], 4, "", true);
     }
@@ -89,7 +92,7 @@ function previousLevel() {
 }
 
 function checkAnswer(answer) {
-    if(answer === notesToFind[items.score.currentSubLevel-1]) {
+    if(answer === notesToFind[items.score.currentSubLevel - 1]) {
         if(items.score.currentSubLevel >= notesToFind.length) {
             // Go to next level
             items.bonus.good("note");

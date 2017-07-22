@@ -148,7 +148,7 @@ ActivityBase {
                 },
                 State {
                     name: "clicked"
-                    when: button_area.pressed
+                    when: playScaleButtonArea.pressed
                     PropertyChanges {
                         target: playScaleButton
                         scale: 0.9
@@ -156,7 +156,7 @@ ActivityBase {
                 },
                 State {
                     name: "hover"
-                    when: nextButtonArea.containsMouse
+                    when: playScaleButtonArea.containsMouse
                     PropertyChanges {
                         target: playScaleButton
                         scale: 1.1
@@ -204,7 +204,7 @@ ActivityBase {
                 },
                 State {
                     name: "clicked"
-                    when: button_area.pressed
+                    when: playButtonArea.pressed
                     PropertyChanges {
                         target: playButton
                         scale: 0.9
@@ -212,7 +212,7 @@ ActivityBase {
                 },
                 State {
                     name: "hover"
-                    when: nextButtonArea.containsMouse
+                    when: playButtonArea.containsMouse
                     PropertyChanges {
                         target: playScaleButton
                         scale: 1.1
@@ -263,7 +263,7 @@ ActivityBase {
         GridView {
             id: grid
             visible: instructionText.visible
-            anchors: {
+            anchors {
                 left: staff.right
                 right: background.right
                 leftMargin: 15 * ApplicationInfo.ratio
@@ -295,24 +295,26 @@ ActivityBase {
                     fontSizeMode: Text.Fit
                     horizontalAlignment: Text.AlignHCenter
                 }
-
                 MouseArea {
+                    id: buttonClick
                     anchors.fill: parent
-                    onClicked: select();
+                    onClicked: select()
                 }
 
                 function select() {
+                    grid.currentIndex = index
+                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav';
+                    items.audioEffects.play(noteToPlay);
                     okButton.currentAnswer = note
                 }
             }
 
             highlight: Rectangle {
                 id: noteHighlight
-                width: grid.cellWidth
-                height: grid.cellHeight
-                radius: width / 2
-                border.width: 2
-                visible: true
+                color: "red"
+                opacity: 0.6
+                border.width: 1.1
+                border.color: "white"
             }
         }
 
