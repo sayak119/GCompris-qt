@@ -69,8 +69,7 @@ function initLevel() {
             }
             notesToFind = Core.shuffle(notes);
             var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav';
-            items.audioEffects.play(noteToPlay);
-            print(notesToFind[items.score.currentSubLevel - 1])
+            items.audioEffects.play(noteToPlay)
         }
         items.staff.addNote(notesToFind[items.score.currentSubLevel-1], 4, "", true);
     }
@@ -100,7 +99,7 @@ function checkAnswer(answer) {
         else {
             items.score.currentSubLevel ++;
             items.staff.eraseAllNotes();
-            items.staff.addNote(notesToFind[items.score.currentSubLevel-1], 4, "", true);
+            items.staff.addNote(notesToFind[items.score.currentSubLevel - 1], 4, "", true);
         }
     }
     else {

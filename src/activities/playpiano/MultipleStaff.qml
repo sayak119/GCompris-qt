@@ -71,6 +71,7 @@ Item {
     }
 
     function play() {
+        print("hello")
         musicTimer.currentPlayedStaff = 0;
         musicTimer.currentNote = 0;
         musicTimer.interval = 1000;

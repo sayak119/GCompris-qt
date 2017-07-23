@@ -82,8 +82,8 @@ ActivityBase {
                 color: "black"
                 z: 3
                 anchors.fill: parent
-                fontSizeMode: Text.Fit
                 horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.Fit
                 wrapMode: Text.WordWrap
                 text: [2, 3, 4, 12, 13, 14].indexOf(bar.level) !== -1 ?
                     qsTr("Click on the note name to match the pitch. Then click OK to check.") :
@@ -112,7 +112,7 @@ ActivityBase {
 
         Rectangle {
             id: playScaleButton
-            width: parent.width / 6
+            width: horizontalLayout ? parent.width * 0.3 : parent.width * 0.45
             height: 30 * ApplicationInfo.ratio
             color: "#d8ffffff"
             border.color: "#2a2a2a"
@@ -128,6 +128,7 @@ ActivityBase {
                 id: playScaleButtonText
                 anchors.centerIn: parent
                 text: qsTr("Play scale")
+                fontSizeMode: Text.Fit
                 wrapMode: Text.WordWrap
             }
 
@@ -168,23 +169,24 @@ ActivityBase {
 
         Rectangle {
             id: playButton
-            width: parent.width / 6
+            width: horizontalLayout ? parent.width * 0.3 : parent.width * 0.45
             height: 30 * ApplicationInfo.ratio
             color: "#d8ffffff"
             border.color: "#2a2a2a"
             border.width: 3
             radius: 8
             z: 5
-            anchors.top: instructionBox.bottom
-            anchors.topMargin: 15
-            anchors.left: playScaleButton.right
+            anchors.top: staff.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 20
             visible: bar.level == 1 || bar.level == 11
 
             GCText {
                 id: playButtonText
                 anchors.centerIn: parent
-                text: qsTr("Play")
-                wrapMode: Text.WordWrap
+                text: bar.level == 1 ? qsTr("Play Treble Clef") : qsTr("Play Bass Style")
+                fontSizeMode: Text.Fit
+                wrapMode: Text.Wrap
             }
 
             MouseArea {
@@ -332,10 +334,12 @@ ActivityBase {
             source:"qrc:/gcompris/src/core/resource/bar_ok.svg"
             width: parent.width * 0.1
             height: parent.width * 0.1
-            anchors.right: background.right
-            anchors.bottom: score.top
-            anchors.bottomMargin: 20
-            anchors.rightMargin: 20
+            anchors {
+                right: background.right
+                bottom: score.top
+                bottomMargin: 20
+                rightMargin: 20
+            }
             property string currentAnswer: ""
             MouseArea {
                 anchors.fill: parent
