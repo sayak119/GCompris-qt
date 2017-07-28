@@ -159,7 +159,7 @@ ActivityBase {
                     name: "hover"
                     when: playButtonArea.containsMouse
                     PropertyChanges {
-                        target: playScaleButton
+                        target: playButton
                         scale: 1.1
                     }
                 }
@@ -343,7 +343,7 @@ ActivityBase {
 
         Bar {
             id: bar
-            content: BarEnumContent { value: help | home | level }
+            content: BarEnumContent { value: (bar.level == 1 || bar.level == 11) ?  (help | home) : (help | home | level | reload) }
             onHelpClicked: {
                 displayDialog(dialogHelp)
             }
