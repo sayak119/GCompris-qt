@@ -49,7 +49,9 @@ function initLevel() {
 
     if(items.bar.level === 1 || items.bar.level === 11) {
         //items.staff.displayNoteLabel(true);
+        var notes = ["1", "2", "3", "4", "5", "6", "7","1","-1"];
         for(var i = 0 ; i < 8 ; ++ i) {
+            items.gridRepeater.append({"note":notes[i]});
             items.staff.addNote("" + (i + 1), 4, "", true);
         }
     }

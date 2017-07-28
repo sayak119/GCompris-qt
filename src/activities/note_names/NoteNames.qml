@@ -111,7 +111,7 @@ ActivityBase {
         }
 
         Rectangle {
-            id: playScaleButton
+            id: playButton
             width: horizontalLayout ? parent.width * 0.3 : parent.width * 0.45
             height: 30 * ApplicationInfo.ratio
             color: "#d8ffffff"
@@ -122,63 +122,6 @@ ActivityBase {
             anchors.top: instructionBox.bottom
             anchors.topMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: bar.level == 1 || bar.level == 11
-
-            GCText {
-                id: playScaleButtonText
-                anchors.centerIn: parent
-                text: qsTr("Play scale")
-                fontSizeMode: Text.Fit
-                wrapMode: Text.WordWrap
-            }
-
-            MouseArea {
-                id: playScaleButtonArea
-                anchors.fill: parent
-                onClicked: {
-                    staff.play()
-                }
-            }
-            states: [
-                State {
-                    name: "notclicked"
-                    PropertyChanges {
-                        target: playScaleButton
-                        scale: 1.0
-                    }
-                },
-                State {
-                    name: "clicked"
-                    when: playScaleButtonArea.pressed
-                    PropertyChanges {
-                        target: playScaleButton
-                        scale: 0.9
-                    }
-                },
-                State {
-                    name: "hover"
-                    when: playScaleButtonArea.containsMouse
-                    PropertyChanges {
-                        target: playScaleButton
-                        scale: 1.1
-                    }
-                }
-            ]
-            Behavior on scale { NumberAnimation { duration: 70 } }
-        }
-
-        Rectangle {
-            id: playButton
-            width: horizontalLayout ? parent.width * 0.3 : parent.width * 0.45
-            height: 30 * ApplicationInfo.ratio
-            color: "#d8ffffff"
-            border.color: "#2a2a2a"
-            border.width: 3
-            radius: 8
-            z: 5
-            anchors.top: staff.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: 20
             visible: bar.level == 1 || bar.level == 11
 
             GCText {
@@ -231,10 +174,57 @@ ActivityBase {
             height: background.height / 4
             width: bar.level == 1 || bar.level == 11 ? background.width * 0.8 : background.width / 2
             anchors.bottom: bar.top
-            anchors.bottomMargin: bar.height / 1.5
+            anchors.bottomMargin: bar.height
             anchors.horizontalCenter: bar.level == 1 || bar.level == 11 ? parent.horizontalCenter : undefined
             nbMaxNotesPerStaff: bar.level == 1 || bar.level == 11 ? 8 : 1
             firstNoteX: bar.level == 1 || bar.level == 11 ? width / 5 : width / 2
+        }
+
+        Grid {
+            id: bottomNotesGrid
+            rows: 1
+            spacing: 30
+            anchors.bottom: background.bottom
+            anchors.bottomMargin: background.height * 0.01
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: staff.height
+            visible: (bar.level == 1 || bar.level == 11) ? true : false
+
+            property int itemWidth: 60
+            property int itemHeight: itemWidth
+
+            Repeater {
+                model: gridRepeater
+
+                Rectangle {
+                id: notes
+                color: dummyNote.noteColorMap[note]
+                width: bottomNotesGrid.itemWidth
+                height: bottomNotesGrid.itemHeight
+                radius: width / 5
+                border.color: "black"
+
+                GCText {
+                    id: bottomNotesText
+                    text: parseInt(note) > 0 ? dummyNote.whiteNoteName[note] : dummyNote.blackNoteName[note]
+                    anchors.centerIn: parent
+                    fontSizeMode: Text.Fit
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                MouseArea {
+                    id: buttonClick
+                    anchors.fill: parent
+                    onClicked: select()
+                }
+
+                function select() {
+                    grid.currentIndex = index
+                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav';
+                    items.audioEffects.play(noteToPlay);
+                }
+              }
+            }
         }
 
         DialogHelp {
@@ -270,7 +260,7 @@ ActivityBase {
                 right: background.right
                 leftMargin: 15 * ApplicationInfo.ratio
                 rightMargin: 50 * ApplicationInfo.ratio
-                top: playScaleButton.bottom
+                top: playButton.bottom
             }
             keyNavigationWraps: true
             interactive: false
