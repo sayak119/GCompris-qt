@@ -59,66 +59,28 @@ ActivityBase {
 
         property int currentType: 1
 
-        /*Column {
-            spacing: 2
-            anchors.fill: parent
-            GCText {
-                text: qsTr("Click the piano keys...")
-            }
-            MultipleStaff {
-                id: staff
-                width: 500
-                height: 300
-                nbStaves: 1
-                clef: "bass"
-            }
-            Piano {
-                id: piano
-                width: 500
-                height: 300
-                onNoteClicked: {
-                    print(note);
-                    staff.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat")
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/'+'bass'+'_pitches/'+currentType+'/'+note+'.wav';
-                    items.audioEffects.play(noteToPlay);
-                }
-            }
-            Image {
-                source: "qrc:/gcompris/src/activities/playpiano/resource/play.svg"
-                sourceSize.width: 75
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: staff.play()
-                }
-            }
-        }*/
-
-        Grid {
-            id: pianoGrid
-            columns: 2
-            MultipleStaff {
-                id: staff1
-                width: 300
-                height: 200
-                nbStaves: 1
-                clef: "bass"
-                nbMaxNotesPerStaff: 6
-                noteIsColored: true
-            }
             MultipleStaff {
                 id: staff2
                 width: 400
-                height: 300
+                height: 400
                 nbStaves: 2
-                clef: "treble"
+                clef: "bass"
                 nbMaxNotesPerStaff: 10
                 noteIsColored: true
                 isMetronomeDisplayed: true
+                anchors.right: parent.right
+                anchors.rightMargin: 100
+                anchors.top: parent.top
+                anchors.topMargin: 100
             }
             Piano {
                 id: piano
                 width: background.width * 0.5
                 height: background.height * 0.5
+                anchors.right: staff2.left
+                anchors.rightMargin: 100
+                anchors.top: parent.top
+                anchors.topMargin: 100
                 onNoteClicked: {
                     onlyNote.value = note;
                     staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
@@ -127,16 +89,12 @@ ActivityBase {
                     items.audioEffects.play(noteToPlay);
                 }
             }
-            Note {
-                id: onlyNote
-                value: "1"
-                type: currentType
-                width: 40
-                height: 40
-            }
-        }
+
             Row {
                 id: optionsRow
+                anchors.top: staff2.bottom
+                anchors.right: parent.right
+                anchors.rightMargin: 50
                 Image {
                     source: "qrc:/gcompris/src/activities/playpiano/resource/whole-note.svg"
                     sourceSize.width: 50
@@ -196,18 +154,17 @@ ActivityBase {
                 }
             }
 
-            GCDialogCheckBox {
-                id: button
-                onClicked: piano.useSharpNotation = !piano.useSharpNotation
-            }
-            
-            GCText {
-                text: qsTr("Change accidental style")
-            }
-
-            Image {
-                source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/playpiano/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/playpiano/resource/blackflat.svg"
-            }
+//             GCDialogCheckBox {
+//                 id: button
+//                 onClicked: piano.useSharpNotation = !piano.useSharpNotation
+//             }
+//             GCText {
+//                 text: qsTr("Change accidental style")
+//             }
+//
+//             Image {
+//                 source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/playpiano/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/playpiano/resource/blackflat.svg"
+//             }
 
         function loadMelody() {
             var data = Dataset.get();
