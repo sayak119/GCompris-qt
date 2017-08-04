@@ -85,8 +85,13 @@ ActivityBase {
                     onlyNote.value = note;
                     staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
                     var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
-                    print(noteToPlay);
                     items.audioEffects.play(noteToPlay);
+                }
+                Note {
+                    id: onlyNote
+                    value: "1"
+                    type: currentType
+                    visible: false
                 }
             }
 

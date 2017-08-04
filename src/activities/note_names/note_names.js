@@ -27,6 +27,8 @@ var currentLevel = 0
 var numberOfLevel = 20
 var items
 var notesToFind = []
+var noteToPlay
+var bottomNotes = []
 
 function start(items_) {
     items = items_
@@ -38,6 +40,7 @@ function stop() {
 }
 
 function initLevel() {
+    bottomNotes = []
     items.score.currentSubLevel = 1
     items.bar.level = currentLevel + 1
 
@@ -49,12 +52,15 @@ function initLevel() {
 
     if(items.bar.level === 1 || items.bar.level === 11) {
         //items.staff.displayNoteLabel(true);
+        items.bottomNotesRepeater.model = bottomNotes
         var notes = ["1", "2", "3", "4", "5", "6", "7","1","-1"];
         for(var i = 0 ; i < 8 ; ++ i) {
-            items.gridRepeater.append({"note":notes[i]});
+            bottomNotes.push({ "note":notes[i] });
             items.staff.addNote("" + (i + 1), 4, "", true);
         }
+        items.bottomNotesRepeater.model = bottomNotes
     }
+
     else {
         //items.staff.displayNoteLabel(false);
         if([5, 6, 7, 8, 9, 10, 15, 16, 17, 18, 19, 20].indexOf(items.bar.level) !== -1) {
@@ -70,7 +76,7 @@ function initLevel() {
                 items.gridRepeater.append({"note": notes[i]});
             }
             notesToFind = Core.shuffle(notes);
-            var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav';
+            noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav';
             items.audioEffects.play(noteToPlay)
         }
         items.staff.addNote(notesToFind[items.score.currentSubLevel-1], 4, "", true);
@@ -90,6 +96,11 @@ function previousLevel() {
         currentLevel = numberOfLevel - 1
     }
     initLevel();
+}
+
+function reloadLevel() {
+    items.audioEffects.play(noteToPlay)
+    items.okButton.currentAnswer = ""
 }
 
 function checkAnswer(answer) {

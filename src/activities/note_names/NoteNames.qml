@@ -59,6 +59,8 @@ ActivityBase {
             property alias bar: bar
             property alias bonus: bonus
             property alias gridRepeater: gridRepeater
+            property alias bottomNotesRepeater: bottomNotesRepeater
+            property alias okButton: okButton
             property alias score: score
         }
 
@@ -83,6 +85,7 @@ ActivityBase {
                 z: 3
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 fontSizeMode: Text.Fit
                 wrapMode: Text.WordWrap
                 text: [2, 3, 4, 12, 13, 14].indexOf(bar.level) !== -1 ?
@@ -100,10 +103,10 @@ ActivityBase {
                 width: background.width / 1.5
                 z: 3
                 color: "black"
-                anchors.horizontalCenter: parent.horizontalCenter
                 fontSizeMode: Text.Fit
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 text: bar.level == 1 ? qsTr("These are the eight basic notes in treble clef. They form the C Major Scale.") :
                                        qsTr("These are the eight basic notes in bass clef. They also form the C Major Scale. Notice that the note positions are different than in treble clef.")
@@ -127,7 +130,7 @@ ActivityBase {
             GCText {
                 id: playButtonText
                 anchors.centerIn: parent
-                text: bar.level == 1 ? qsTr("Play Treble Clef") : qsTr("Play Bass Style")
+                text: qsTr("Star levels")
                 fontSizeMode: Text.Fit
                 wrapMode: Text.Wrap
             }
@@ -194,11 +197,12 @@ ActivityBase {
             property int itemHeight: itemWidth
 
             Repeater {
-                model: gridRepeater
+                id: bottomNotesRepeater
+                model: Activity.bottomNotes
 
                 Rectangle {
                 id: notes
-                color: dummyNote.noteColorMap[note]
+                color: dummyNote.noteColorMap[Activity.bottomNotes[index].note]
                 width: bottomNotesGrid.itemWidth
                 height: bottomNotesGrid.itemHeight
                 radius: width / 5
@@ -206,7 +210,7 @@ ActivityBase {
 
                 GCText {
                     id: bottomNotesText
-                    text: parseInt(note) > 0 ? dummyNote.whiteNoteName[note] : dummyNote.blackNoteName[note]
+                    text: parseInt(Activity.bottomNotes[0].note) > 0 ? dummyNote.whiteNoteName[Activity.bottomNotes[index].note] : dummyNote.blackNoteName[Activity.bottomNotes[index].note]
                     anchors.centerIn: parent
                     fontSizeMode: Text.Fit
                     horizontalAlignment: Text.AlignHCenter
@@ -215,7 +219,10 @@ ActivityBase {
                 MouseArea {
                     id: buttonClick
                     anchors.fill: parent
-                    onClicked: select()
+                    onClicked: {
+                        print(JSON.stringify(Activity.bottomNotes[index].note))
+                        select()
+                    }
                 }
 
                 function select() {
@@ -241,8 +248,14 @@ ActivityBase {
             keyboardMode = true
             event.accepted = false
         }
-        Keys.onEnterPressed: grid.currentItem.select();
-        Keys.onReturnPressed: grid.currentItem.select();
+        Keys.onEnterPressed: {
+            print(grid)
+            grid.currentItem.select();
+        }
+        Keys.onReturnPressed: {
+            grid.currentItem.select();
+            Activity.checkAnswer(okButton.currentAnswer);
+            }
         Keys.onRightPressed: grid.moveCurrentIndexRight();
         Keys.onLeftPressed: grid.moveCurrentIndexLeft();
         Keys.onDownPressed: grid.moveCurrentIndexDown();
@@ -273,42 +286,43 @@ ActivityBase {
             property int itemHeight: itemWidth
 
             delegate: Rectangle {
-                id: noteRectangle
-                color: staff.noteIsColored ? dummyNote.noteColorMap[note] : "white"
-                width: grid.itemWidth
-                height: grid.itemHeight
+                id: highlightRectangle
+                width: grid.itemWidth * 1.15
+                height: grid.itemHeight * 1.15
                 radius: width / 5
-                border.color: "black"
-
-                GCText {
-                    id: noteText
-                    text: parseInt(note) > 0 ? dummyNote.whiteNoteName[note] : dummyNote.blackNoteName[note]
+                color: "transparent"
+                Rectangle {
+                    id: noteRectangle
+                    color: staff.noteIsColored ? dummyNote.noteColorMap[note] : "white"
+                    width: grid.itemWidth
+                    height: grid.itemHeight
+                    radius: width / 5
+                    border.color: "black"
                     anchors.centerIn: parent
-                    fontSizeMode: Text.Fit
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                MouseArea {
-                    id: buttonClick
-                    anchors.fill: parent
-                    onClicked: select()
-                }
+                    visible: true
 
-                function select() {
-                    grid.currentIndex = index
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav';
-                    items.audioEffects.play(noteToPlay);
-                    okButton.currentAnswer = note
+                    GCText {
+                        id: noteText
+                        text: parseInt(note) > 0 ? dummyNote.whiteNoteName[note] : dummyNote.blackNoteName[note]
+                        anchors.centerIn: parent
+                        fontSizeMode: Text.Fit
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+                    MouseArea {
+                        id: buttonClick
+                        anchors.fill: parent
+                        onClicked: select()
+                    }
+                }
+                    function select() {
+                        highlightRectangle.color = "red"
+                        grid.currentIndex = index
+                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav';
+                        items.audioEffects.play(noteToPlay);
+                        okButton.currentAnswer = note
+                    }
                 }
             }
-
-            highlight: Rectangle {
-                id: noteHighlight
-                color: "red"
-                opacity: 0.6
-                border.width: 1.1
-                border.color: "white"
-            }
-        }
 
         // Never visible, only used to access the note names, colors
         Note {
@@ -350,6 +364,7 @@ ActivityBase {
             onPreviousLevelClicked: Activity.previousLevel()
             onNextLevelClicked: Activity.nextLevel()
             onHomeClicked: activity.home()
+            onReloadClicked: Activity.reloadLevel()
         }
 
         Bonus {
