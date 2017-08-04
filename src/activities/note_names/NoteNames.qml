@@ -130,7 +130,7 @@ ActivityBase {
             GCText {
                 id: playButtonText
                 anchors.centerIn: parent
-                text: qsTr("Star levels")
+                text: qsTr("Start levels")
                 fontSizeMode: Text.Fit
                 wrapMode: Text.Wrap
             }
@@ -186,14 +186,14 @@ ActivityBase {
         Grid {
             id: bottomNotesGrid
             rows: 1
-            spacing: 30
+            spacing: horizontalLayout ? background.width * 0.03 : background.width * 0.01
             anchors.bottom: background.bottom
             anchors.bottomMargin: background.height * 0.01
             anchors.horizontalCenter: parent.horizontalCenter
             height: staff.height
             visible: (bar.level == 1 || bar.level == 11) ? true : false
 
-            property int itemWidth: 60
+            property int itemWidth:  horizontalLayout ? background.width * 0.05 : background.width * 0.1
             property int itemHeight: itemWidth
 
             Repeater {
