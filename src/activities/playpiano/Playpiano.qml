@@ -32,6 +32,8 @@ ActivityBase {
     onStart: focus = true
     onStop: {}
 
+    property bool horizontalLayout: background.width > background.height ? true : false
+
     pageComponent: Rectangle {
         id: background
         anchors.fill: parent
@@ -61,24 +63,24 @@ ActivityBase {
 
             MultipleStaff {
                 id: staff2
-                width: 400
-                height: 400
+                width: parent.width * 0.35
+                height: parent.height * 0.5
                 nbStaves: 2
                 clef: "bass"
                 nbMaxNotesPerStaff: 10
                 noteIsColored: true
                 isMetronomeDisplayed: true
                 anchors.right: parent.right
-                anchors.rightMargin: 100
                 anchors.top: parent.top
                 anchors.topMargin: 100
+                anchors.rightMargin: 20
             }
             Piano {
                 id: piano
-                width: background.width * 0.5
-                height: background.height * 0.5
+                width: horizontalLayout ? parent.width * 0.6 : parent.width * 0.55
+                height: horizontalLayout ? parent.height * 0.65 : parent.width * 0.45
                 anchors.right: staff2.left
-                anchors.rightMargin: 100
+                anchors.rightMargin: 30
                 anchors.top: parent.top
                 anchors.topMargin: 100
                 onNoteClicked: {

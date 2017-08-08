@@ -114,8 +114,8 @@ ActivityBase {
         }
 
         Rectangle {
-            id: playButton
-            width: horizontalLayout ? parent.width * 0.3 : parent.width * 0.45
+            id: playScale
+            width: horizontalLayout ? parent.width * 0.3 : parent.width * 0.35
             height: 30 * ApplicationInfo.ratio
             color: "#d8ffffff"
             border.color: "#2a2a2a"
@@ -124,7 +124,70 @@ ActivityBase {
             z: 5
             anchors.top: instructionBox.bottom
             anchors.topMargin: 15
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.left: background.left
+            anchors.leftMargin: background.width * 0.15
+            visible: bar.level == 1 || bar.level == 11
+
+            GCText {
+                id: playScaleText
+                anchors.centerIn: parent
+                text: qsTr("Play scale")
+                fontSizeMode: Text.Fit
+                wrapMode: Text.Wrap
+            }
+
+            MouseArea {
+                id: playScaleArea
+                anchors.fill: parent
+                onClicked: {
+                    for(var i = 0; i < Activity.bottomNotes.length; i++) {
+                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[i].note + '.wav';
+                    print(noteToPlay)
+                    items.audioEffects.play(noteToPlay)
+                    }
+                }
+            }
+            states: [
+                State {
+                    name: "notclicked"
+                    PropertyChanges {
+                        target: playScale
+                        scale: 1.0
+                    }
+                },
+                State {
+                    name: "clicked"
+                    when: playScaleArea.pressed
+                    PropertyChanges {
+                        target: playScale
+                        scale: 0.9
+                    }
+                },
+                State {
+                    name: "hover"
+                    when: playScaleArea.containsMouse
+                    PropertyChanges {
+                        target: playScale
+                        scale: 1.1
+                    }
+                }
+            ]
+            Behavior on scale { NumberAnimation { duration: 70 } }
+        }
+
+        Rectangle {
+            id: playButton
+            width: horizontalLayout ? parent.width * 0.3 : parent.width * 0.35
+            height: 30 * ApplicationInfo.ratio
+            color: "#d8ffffff"
+            border.color: "#2a2a2a"
+            border.width: 3
+            radius: 8
+            z: 5
+            anchors.top: instructionBox.bottom
+            anchors.topMargin: 15
+            anchors.leftMargin: 30
+            anchors.left: playScale.right
             visible: bar.level == 1 || bar.level == 11
 
             GCText {
@@ -139,7 +202,7 @@ ActivityBase {
                 id: playButtonArea
                 anchors.fill: parent
                 onClicked: {
-                    Activity.nextLevel()
+                     Activity.nextLevel()
                 }
             }
             states: [
@@ -220,14 +283,13 @@ ActivityBase {
                     id: buttonClick
                     anchors.fill: parent
                     onClicked: {
-                        print(JSON.stringify(Activity.bottomNotes[index].note))
                         select()
                     }
                 }
 
                 function select() {
                     grid.currentIndex = index
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav';
+                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav';
                     items.audioEffects.play(noteToPlay);
                 }
               }
@@ -249,7 +311,6 @@ ActivityBase {
             event.accepted = false
         }
         Keys.onEnterPressed: {
-            print(grid)
             grid.currentItem.select();
         }
         Keys.onReturnPressed: {
@@ -290,7 +351,9 @@ ActivityBase {
                 width: grid.itemWidth * 1.15
                 height: grid.itemHeight * 1.15
                 radius: width / 5
-                color: "transparent"
+                color: index === grid.currentIndex ? "red" : "transparent"
+                border.color: index === grid.currentIndex ? "white" : "transparent"
+
                 Rectangle {
                     id: noteRectangle
                     color: staff.noteIsColored ? dummyNote.noteColorMap[note] : "white"
@@ -315,7 +378,6 @@ ActivityBase {
                     }
                 }
                     function select() {
-                        highlightRectangle.color = "red"
                         grid.currentIndex = index
                         var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav';
                         items.audioEffects.play(noteToPlay);
