@@ -51,9 +51,7 @@ function initLevel() {
     items.gridRepeater.clear();
 
     if(items.bar.level === 1 || items.bar.level === 11) {
-        //items.staff.displayNoteLabel(true);
-        items.bottomNotesRepeater.model = bottomNotes
-        var notes = ["1", "2", "3", "4", "5", "6", "7","1","-1"];
+        var notes = ["1", "2", "3", "4", "5", "6", "7","1"]
         for(var i = 0 ; i < 8 ; ++ i) {
             bottomNotes.push({ "note":notes[i] });
             items.staff.addNote("" + (i + 1), 4, "", true);
@@ -76,11 +74,11 @@ function initLevel() {
                 items.gridRepeater.append({"note": notes[i]});
             }
             notesToFind = Core.shuffle(notes);
-            noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav';
-            items.audioEffects.play(noteToPlay)
         }
-        items.staff.addNote(notesToFind[items.score.currentSubLevel-1], 4, "", true);
+        noteToPlay = items.bar.level > 10 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
+        items.staff.addNote(notesToFind[items.score.currentSubLevel - 1], 4, "", true);
     }
+    items.audioEffects.play(noteToPlay)
     items.score.numberOfSubLevels = notesToFind.length
 }
 
@@ -100,7 +98,6 @@ function previousLevel() {
 
 function reloadLevel() {
     items.audioEffects.play(noteToPlay)
-    items.okButton.currentAnswer = ""
 }
 
 function checkAnswer(answer) {
@@ -112,7 +109,10 @@ function checkAnswer(answer) {
         else {
             items.score.currentSubLevel ++;
             items.staff.eraseAllNotes();
+            noteToPlay = items.bar.level > 10 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
+            items.audioEffects.play(noteToPlay)
             items.staff.addNote(notesToFind[items.score.currentSubLevel - 1], 4, "", true);
+            items.audioEffects.play(noteToPlay)
         }
     }
     else {

@@ -141,9 +141,9 @@ ActivityBase {
                 anchors.fill: parent
                 onClicked: {
                     for(var i = 0; i < Activity.bottomNotes.length; i++) {
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[i].note + '.wav';
-                    print(noteToPlay)
-                    items.audioEffects.play(noteToPlay)
+                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[3].note + '.wav';
+                        print(noteToPlay)
+                        items.audioEffects.play(noteToPlay)
                     }
                 }
             }
@@ -239,8 +239,8 @@ ActivityBase {
             clef: bar.level <= 10 ? "treble" : "bass"
             height: background.height / 4
             width: bar.level == 1 || bar.level == 11 ? background.width * 0.8 : background.width / 2
-            anchors.bottom: bar.top
-            anchors.bottomMargin: bar.height
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: bar.level != 11 ? parent.height * 0.35 : parent.height * 0.25
             anchors.horizontalCenter: bar.level == 1 || bar.level == 11 ? parent.horizontalCenter : undefined
             nbMaxNotesPerStaff: bar.level == 1 || bar.level == 11 ? 8 : 1
             firstNoteX: bar.level == 1 || bar.level == 11 ? width / 5 : width / 2
@@ -289,7 +289,7 @@ ActivityBase {
 
                 function select() {
                     grid.currentIndex = index
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav';
+                    var noteToPlay = bar.level == 1 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav'
                     items.audioEffects.play(noteToPlay);
                 }
               }
@@ -379,7 +379,7 @@ ActivityBase {
                 }
                     function select() {
                         grid.currentIndex = index
-                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav';
+                        var noteToPlay = bar.level > 10 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + note + '.wav'
                         items.audioEffects.play(noteToPlay);
                         okButton.currentAnswer = note
                     }
@@ -419,7 +419,7 @@ ActivityBase {
 
         Bar {
             id: bar
-            content: BarEnumContent { value: (bar.level == 1 || bar.level == 11) ?  (help | home) : (help | home | level | reload) }
+            content: BarEnumContent { value: (bar.level == 1 || bar.level == 11) ?  (help | home | level ) : (help | home | level | reload) }
             onHelpClicked: {
                 displayDialog(dialogHelp)
             }
