@@ -75,7 +75,7 @@ function initLevel() {
             }
             notesToFind = Core.shuffle(notes);
         }
-        noteToPlay = items.bar.level > 10 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
+        noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
         items.staff.addNote(notesToFind[items.score.currentSubLevel - 1], 4, "", true);
     }
     items.audioEffects.play(noteToPlay)
@@ -109,10 +109,9 @@ function checkAnswer(answer) {
         else {
             items.score.currentSubLevel ++;
             items.staff.eraseAllNotes();
-            noteToPlay = items.bar.level > 10 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
+            noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
             items.audioEffects.play(noteToPlay)
             items.staff.addNote(notesToFind[items.score.currentSubLevel - 1], 4, "", true);
-            items.audioEffects.play(noteToPlay)
         }
     }
     else {

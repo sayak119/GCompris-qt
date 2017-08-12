@@ -62,6 +62,7 @@ ActivityBase {
             property alias bottomNotesRepeater: bottomNotesRepeater
             property alias okButton: okButton
             property alias score: score
+            property var clef: items.bar.level > 10 ? "bass" : "treble"
         }
 
         onStart: { Activity.start(items) }
@@ -141,7 +142,7 @@ ActivityBase {
                 anchors.fill: parent
                 onClicked: {
                     for(var i = 0; i < Activity.bottomNotes.length; i++) {
-                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[3].note + '.wav';
+                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[3].note + '.wav';
                         print(noteToPlay)
                         items.audioEffects.play(noteToPlay)
                     }
@@ -289,7 +290,7 @@ ActivityBase {
 
                 function select() {
                     grid.currentIndex = index
-                    var noteToPlay = bar.level == 1 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav'
+                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav'
                     items.audioEffects.play(noteToPlay);
                 }
               }
@@ -379,7 +380,7 @@ ActivityBase {
                 }
                     function select() {
                         grid.currentIndex = index
-                        var noteToPlay = bar.level > 10 ? 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + '1' + '/' + note + '.wav' : 'qrc:/gcompris/src/activities/playpiano/resource/' + 'treble' + '_pitches/' + '1' + '/' + note + '.wav'
+                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + note + '.wav'
                         items.audioEffects.play(noteToPlay);
                         okButton.currentAnswer = note
                     }
