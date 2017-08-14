@@ -26,6 +26,9 @@ import "../../core"
 
 Item {
     id: staff
+
+    property Item main: activity.main
+
     property int verticalDistanceBetweenLines: height / nbLines // todo width/nbLines * smth
     
     property string clef
@@ -49,7 +52,7 @@ Item {
 
     Image {
         id: clefImage
-        source: clef ? "qrc:/gcompris/src/activities/playpiano/resource/"+clef+"Clef.svg" : ""
+        source: clef ? "qrc:/gcompris/src/activities/playpiano/resource/" + clef + "Clef.svg" : ""
         sourceSize.width: (nbLines-2)*verticalDistanceBetweenLines
     }
 
@@ -68,7 +71,7 @@ Item {
     Rectangle {
         width: 5
         border.width: 5
-        height: (nbLines-1) * verticalDistanceBetweenLines+5
+        height: (nbLines - 1) * verticalDistanceBetweenLines + 5
         color: "black"
         x: staff.width
         y: 0
@@ -77,10 +80,10 @@ Item {
     Rectangle {
         width: 5
         border.width: 5
-        height: (nbLines-1) * verticalDistanceBetweenLines+5
+        height: (nbLines - 1) * verticalDistanceBetweenLines + 5
         visible: lastPartition
         color: "black"
-        x: staff.width-10
+        x: staff.width - 10
         y: 0
     }
 
@@ -92,10 +95,10 @@ Item {
         id: metronome
         width: 5
         border.width: 10
-        height: (nbLines-1) * verticalDistanceBetweenLines+5
+        height: (nbLines - 1) * verticalDistanceBetweenLines + 5
         visible: isMetronomeDisplayed && showMetronome
         color: "red"
-        x: firstNoteX-width/2
+        x: firstNoteX - width/2
         y: 0
         Behavior on x {
             SmoothedAnimation {
@@ -133,10 +136,10 @@ Item {
         notes.clear();
     }
 
-    property int noteWidth: (staff.width-10-clefImage.width) / 10
+    property int noteWidth: (staff.width-10 - clefImage.width) / 10
     Row {
         id: notesRow
-        x: firstNoteX-noteWidth/2
+        x: firstNoteX - noteWidth/2
         Repeater {
             model: notes
             Note {
@@ -145,7 +148,7 @@ Item {
                 blackType: mBlackType
                 highlightWhenPlayed: mHighlightWhenPlayed
                 noteIsColored: staff.noteIsColored
-                width: noteWidth
+                width: (main.width > main.height) ? noteWidth : (notes.count == 1 ? noteWidth * 2 : noteWidth * 1.2)
                 height: staff.height
 
                 function play() {
@@ -171,9 +174,9 @@ Item {
                         return (nbLines-3)*verticalDistanceBetweenLines - (parseInt(mValue)-1)*verticalDistanceBetweenLines/2 + shift
                     }
                     else if(mValue >= -2)
-                        return (nbLines-3)*verticalDistanceBetweenLines - (Math.abs(parseInt(mValue))-1)*verticalDistanceBetweenLines/2 + shift
+                        return (nbLines - 3) * verticalDistanceBetweenLines - (Math.abs(parseInt(mValue)) - 1) * verticalDistanceBetweenLines/2 + shift
                     else
-                        return (nbLines-3)*verticalDistanceBetweenLines - (Math.abs(parseInt(mValue)))*verticalDistanceBetweenLines/2 + shift
+                        return (nbLines - 3) * verticalDistanceBetweenLines - (Math.abs(parseInt(mValue))) * verticalDistanceBetweenLines/2 + shift
                 }
             }
         }

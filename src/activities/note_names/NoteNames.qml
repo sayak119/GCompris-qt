@@ -62,7 +62,7 @@ ActivityBase {
             property alias bottomNotesRepeater: bottomNotesRepeater
             property alias okButton: okButton
             property alias score: score
-            property var clef: items.bar.level > 10 ? "bass" : "treble"
+            readonly property string clef: items.bar.level > 10 ? "bass" : "treble"
         }
 
         onStart: { Activity.start(items) }
@@ -85,6 +85,8 @@ ActivityBase {
                 color: "black"
                 z: 3
                 anchors.fill: parent
+                anchors.rightMargin: parent.width * 0.1
+                anchors.leftMargin: parent.width * 0.1
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 fontSizeMode: Text.Fit
@@ -106,6 +108,8 @@ ActivityBase {
                 color: "black"
                 fontSizeMode: Text.Fit
                 anchors.fill: parent
+                anchors.rightMargin: parent.width * 0.1
+                anchors.leftMargin: parent.width * 0.1
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
@@ -142,9 +146,8 @@ ActivityBase {
                 anchors.fill: parent
                 onClicked: {
                     for(var i = 0; i < Activity.bottomNotes.length; i++) {
-                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[3].note + '.wav';
-                        print(noteToPlay)
-                        items.audioEffects.play(noteToPlay)
+                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[i].note + '.wav';
+                        items.audioEffects.append(noteToPlay)
                     }
                 }
             }
@@ -313,6 +316,7 @@ ActivityBase {
         }
         Keys.onEnterPressed: {
             grid.currentItem.select();
+            Activity.checkAnswer(okButton.currentAnswer);
         }
         Keys.onReturnPressed: {
             grid.currentItem.select();

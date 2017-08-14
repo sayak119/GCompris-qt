@@ -125,7 +125,7 @@ Item {
                 var note = staves.itemAt(currentPlayedStaff).notes.get(currentNote).mValue
 
                 // TODO some notes does not play if they are played in the rcc directly...
-                var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/'+multipleStaff.clef+'_pitches/'+currentType+'/'+note+'.wav';
+                var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + multipleStaff.clef+ '_pitches/' + currentType + '/'+note + '.wav';
                 items.audioEffects.play(noteToPlay);
                 //staves.itemAt(currentPlayedStaff).notes.get(currentNote).play()
 
@@ -140,8 +140,8 @@ Item {
                     if(currentPlayedStaff < nbStaves && currentNote < staves.itemAt(currentPlayedStaff).notes.count) {
                         print("play next staff");
                         staves.itemAt(currentPlayedStaff).showMetronome = isMetronomeDisplayed;
-                        if(currentPlayedStaff>0)
-                            staves.itemAt(currentPlayedStaff-1).showMetronome = false;
+                        if(currentPlayedStaff > 0)
+                            staves.itemAt(currentPlayedStaff - 1).showMetronome = false;
                         staves.itemAt(currentPlayedStaff).playNote(currentNote);
                         musicTimer.start();
                     }
