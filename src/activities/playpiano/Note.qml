@@ -61,6 +61,7 @@ Item {
                                   "-5": qsTr("Bb")}
 
     property bool highlightWhenPlayed: false
+    property alias highlightTimer: highlightTimer
 
     Image {
         id: blackTypeImage
@@ -114,8 +115,8 @@ Item {
         id: highlightTimer
         interval: noteDuration
         onRunningChanged: {
-//             highlightRectangle.visible = running
-            highlightImage.visible = running
+            highlightRectangle.visible = running
+//             highlightImage.visible = running
         }
     }
 }

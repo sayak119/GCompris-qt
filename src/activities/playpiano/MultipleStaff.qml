@@ -46,10 +46,10 @@ Item {
             Staff {
                 id: staff
                 clef: multipleStaff.clef
-                height: (multipleStaff.height-distanceBetweenStaff*(nbStaves-1))/nbStaves
+                height: (multipleStaff.height - distanceBetweenStaff * (nbStaves - 1)) / nbStaves
                 width: multipleStaff.width
-                y: index * (height+distanceBetweenStaff)
-                lastPartition: index == nbStaves-1
+                y: index * (height + distanceBetweenStaff)
+                lastPartition: index == nbStaves - 1
                 nbMaxNotesPerStaff: multipleStaff.nbMaxNotesPerStaff
                 noteIsColored: multipleStaff.noteIsColored
                 isMetronomeDisplayed: multipleStaff.isMetronomeDisplayed
@@ -60,7 +60,7 @@ Item {
 
     function addNote(newValue_, newType_, newBlackType_, highlightWhenPlayed_) {
         if(staves.itemAt(currentStaff).notes.count > nbMaxNotesPerStaff) {
-            if(currentStaff+1 >= nbStaves) {
+            if(currentStaff + 1 >= nbStaves) {
                 return
             }
             else
@@ -71,7 +71,6 @@ Item {
     }
 
     function play() {
-        print("hello")
         musicTimer.currentPlayedStaff = 0;
         musicTimer.currentNote = 0;
         musicTimer.interval = 1000;
@@ -125,9 +124,9 @@ Item {
                 var note = staves.itemAt(currentPlayedStaff).notes.get(currentNote).mValue
 
                 // TODO some notes does not play if they are played in the rcc directly...
-                var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + multipleStaff.clef+ '_pitches/' + currentType + '/'+note + '.wav';
+                var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + multipleStaff.clef + '_pitches/' + currentType + '/' + note + '.wav';
                 items.audioEffects.play(noteToPlay);
-                //staves.itemAt(currentPlayedStaff).notes.get(currentNote).play()
+                staves.itemAt(currentPlayedStaff).notesRepeater.itemAt(currentNote).play()
 
                 if(currentNote == 0) {
                     staves.itemAt(currentPlayedStaff).initMetronome();

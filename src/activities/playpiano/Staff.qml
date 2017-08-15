@@ -49,6 +49,7 @@ Item {
     property int defaultFirstNoteX: clefImage.width
     property int nbMaxNotesPerStaff
     property bool noteIsColored
+    property alias notesRepeater: notesRepeater
 
     Image {
         id: clefImage
@@ -141,6 +142,7 @@ Item {
         id: notesRow
         x: firstNoteX - noteWidth/2
         Repeater {
+            id: notesRepeater
             model: notes
             Note {
                 value: mValue
@@ -171,7 +173,7 @@ Item {
                     }
 
                     if(mValue > 0) {
-                        return (nbLines-3)*verticalDistanceBetweenLines - (parseInt(mValue)-1)*verticalDistanceBetweenLines/2 + shift
+                        return (nbLines - 3) * verticalDistanceBetweenLines - (parseInt(mValue) - 1) * verticalDistanceBetweenLines/2 + shift
                     }
                     else if(mValue >= -2)
                         return (nbLines - 3) * verticalDistanceBetweenLines - (Math.abs(parseInt(mValue)) - 1) * verticalDistanceBetweenLines/2 + shift
