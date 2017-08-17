@@ -73,7 +73,7 @@ Item {
     function play() {
         musicTimer.currentPlayedStaff = 0;
         musicTimer.currentNote = 0;
-        musicTimer.interval = 1000;
+        musicTimer.interval = 500;
         for(var v = 1 ; v < currentStaff ; ++ v)
             staves.itemAt(v).showMetronome = false;
         // Only display metronome if we want to
@@ -147,7 +147,7 @@ Item {
                 }
                 else if(staves.itemAt(currentPlayedStaff).notes.get(currentNote) !== undefined) {
                     print("will play next " + JSON.stringify(staves.itemAt(currentPlayedStaff).notes.get(currentNote)));
-                    staves.itemAt(currentPlayedStaff).playNote(currentNote);
+                    staves.itemAt(currentPlayedStaff).notesRepeater.itemAt(currentNote).play()
                     musicTimer.start();
                 }
             }

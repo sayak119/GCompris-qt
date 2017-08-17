@@ -150,12 +150,13 @@ Item {
                 blackType: mBlackType
                 highlightWhenPlayed: mHighlightWhenPlayed
                 noteIsColored: staff.noteIsColored
-                width: (main.width > main.height) ? noteWidth : (notes.count == 1 ? noteWidth * 2 : noteWidth * 1.2)
+                width: notes.count == 1 ? Math.min(main.width,main.height) * 0.1 : noteWidth
                 height: staff.height
 
                 function play() {
-                    if(highlightWhenPlayed)
+                    if(highlightWhenPlayed) {
                         highlightTimer.start();
+                    }
                 }
 
                 y: {

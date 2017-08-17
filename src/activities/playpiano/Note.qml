@@ -113,7 +113,7 @@ Item {
 
     Timer {
         id: highlightTimer
-        interval: noteDuration
+        interval: 1500
         onRunningChanged: {
             highlightRectangle.visible = running
 //             highlightImage.visible = running

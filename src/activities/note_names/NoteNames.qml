@@ -145,10 +145,13 @@ ActivityBase {
                 id: playScaleArea
                 anchors.fill: parent
                 onClicked: {
-                    for(var i = 0; i < Activity.bottomNotes.length; i++) {
-                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[i].note + '.wav';
-                        items.audioEffects.append(noteToPlay)
-                    }
+//                      items.staff.eraseAllNotes()
+//                     for(var i = 0; i < Activity.bottomNotes.length; i++) {
+//                         var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[i].note + '.wav';
+//                         items.staff.addNote(noteToPlay, 4, "", true);
+//                         items.audioEffects.append(noteToPlay)
+//                     }
+                    items.staff.play()
                 }
             }
             states: [
@@ -246,6 +249,8 @@ ActivityBase {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: bar.level != 11 ? parent.height * 0.35 : parent.height * 0.25
             anchors.horizontalCenter: bar.level == 1 || bar.level == 11 ? parent.horizontalCenter : undefined
+            anchors.left: parent.left
+            anchors.leftMargin: horizontalLayout ? parent.width * 0.1 : parent.width * 0.05
             nbMaxNotesPerStaff: bar.level == 1 || bar.level == 11 ? 8 : 1
             firstNoteX: bar.level == 1 || bar.level == 11 ? width / 5 : width / 2
         }
@@ -294,7 +299,7 @@ ActivityBase {
                 function select() {
                     grid.currentIndex = index
                     var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav'
-                    items.audioEffects.play(noteToPlay);
+                    items.staff.play(noteToPlay)
                 }
               }
             }
@@ -338,8 +343,9 @@ ActivityBase {
                 left: staff.right
                 right: background.right
                 leftMargin: 15 * ApplicationInfo.ratio
-                rightMargin: 50 * ApplicationInfo.ratio
-                top: playButton.bottom
+                top: instructionBox.bottom
+                topMargin: horizontalLayout ? 15 * ApplicationInfo.ratio : 15 * ApplicationInfo.ratio
+                bottom: background.bottom
             }
             keyNavigationWraps: true
             interactive: false
@@ -347,6 +353,7 @@ ActivityBase {
             cellWidth: itemWidth + 10
             cellHeight: itemHeight + 10
             height: staff.height
+
 
             property int itemWidth: 60
             property int itemHeight: itemWidth
@@ -403,13 +410,14 @@ ActivityBase {
             id: okButton
             visible: instructionText.visible
             source:"qrc:/gcompris/src/core/resource/bar_ok.svg"
-            width: parent.width * 0.1
-            height: parent.width * 0.1
+            width: Math.min(parent.width,parent.height) * 0.15
+            height: Math.min(parent.width,parent.height) * 0.15
             anchors {
-                right: background.right
+                left: background.left
                 bottom: score.top
+                topMargin: horizontalLayout ? 0.1 * parent.height : 0.01 * parent.height
                 bottomMargin: 20
-                rightMargin: 20
+                leftMargin: 20
             }
             property string currentAnswer: ""
             MouseArea {
