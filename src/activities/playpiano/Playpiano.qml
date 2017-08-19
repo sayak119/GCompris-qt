@@ -54,6 +54,8 @@ ActivityBase {
             property GCAudio audioEffects: activity.audioEffects
             property alias bar: bar
             property alias bonus: bonus
+            property alias staff2: staff2
+            property string staffLength: "short"
         }
 
         onStart: { Activity.start(items) }
@@ -61,28 +63,57 @@ ActivityBase {
 
         property int currentType: 1
 
-            MultipleStaff {
-                id: staff2
-                width: parent.width * 0.35
-                height: parent.height * 0.5
-                nbStaves: 2
-                clef: "bass"
-                nbMaxNotesPerStaff: 10
-                noteIsColored: true
-                isMetronomeDisplayed: true
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.topMargin: 100
-                anchors.rightMargin: 20
+        MultipleStaff {
+            id: staff2
+            width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.5
+            height: parent.height * 0.5
+            nbStaves: 3
+            clef: "bass"
+            nbMaxNotesPerStaff: 8
+            noteIsColored: true
+            isMetronomeDisplayed: true
+            anchors.right: parent.right
+            anchors.top: instructionBox.bottom
+            anchors.topMargin: parent.height * 0.13
+            anchors.rightMargin: 20
+        }
+
+        Rectangle {
+            id: instructionBox
+            radius: 10
+            width: background.width / 1.9
+            height: horizontalLayout ? background.height / 5 : background.height / 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            opacity: 0.8
+            border.width: 6
+            color: "white"
+            border.color: "#87A6DD"
+
+            GCText {
+                id: instructionText
+                color: "black"
+                z: 3
+                anchors.fill: parent
+                anchors.rightMargin: parent.width * 0.1
+                anchors.leftMargin: parent.width * 0.1
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                fontSizeMode: Text.Fit
+                wrapMode: Text.WordWrap
+                text: Activity.instructions[bar.level - 1]
             }
+        }
+
             Piano {
                 id: piano
-                width: horizontalLayout ? parent.width * 0.6 : parent.width * 0.55
-                height: horizontalLayout ? parent.height * 0.65 : parent.width * 0.45
-                anchors.right: staff2.left
-                anchors.rightMargin: 30
-                anchors.top: parent.top
-                anchors.topMargin: 100
+                width: horizontalLayout ? parent.width * 0.4 : parent.width * 0.45
+                height: horizontalLayout ? parent.height * 0.45 : parent.width * 0.4
+                anchors.left: parent.left
+                anchors.leftMargin: horizontalLayout ? parent.width * 0.06 : parent.height * 0.01
+                anchors.top: instructionBox.bottom
+                anchors.topMargin: 70
+                blackLabelsVisible: [4, 5, 6, 7, 8].indexOf(items.bar.level) == -1 ? false : true
+                useSharpNotation: bar.level == 5 ? false : true
                 onNoteClicked: {
                     onlyNote.value = note;
                     staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
@@ -99,42 +130,53 @@ ActivityBase {
 
             Row {
                 id: optionsRow
-                anchors.top: staff2.bottom
+                anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.rightMargin: 50
+                spacing: 30
+
                 Image {
+                    id: wholeNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/whole-note.svg"
                     sourceSize.width: 50
+                    visible: bar.level == 1 || bar.level == 2 ? false : true
                     MouseArea{
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.wholeNote
                     }
                 }
                 Image {
+                    id: halfNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/half-note.svg"
                     sourceSize.width: 50
+                    visible: wholeNote.visible
                     MouseArea{
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.halfNote
                     }
                 }
                 Image {
+                    id: quarterNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/quarter-note.svg"
                     sourceSize.width: 50
+                    visible: wholeNote.visible
                     MouseArea{
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.quarterNote
                     }
                 }
                 Image {
+                    id: eighthNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/eighth-note.svg"
                     sourceSize.width: 50
+                    visible: wholeNote.visible
                     MouseArea{
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.eighthNote
                     }
                 }
                 Image {
+                    id: playButton
                     source: "qrc:/gcompris/src/activities/playpiano/resource/play.svg"
                     sourceSize.width: 75
                     MouseArea{
@@ -143,6 +185,7 @@ ActivityBase {
                     }
                 }
                 Image {
+                    id: clearButton
                     source: "qrc:/gcompris/src/activities/playpiano/resource/edit-clear.svg"
                     sourceSize.width: 75
                     MouseArea{
@@ -152,6 +195,7 @@ ActivityBase {
                 }
 
                 Image {
+                    id: openButton
                     source: "qrc:/gcompris/src/activities/playpiano/resource/open.svg"
                     sourceSize.width: 50
                     MouseArea{
@@ -163,12 +207,13 @@ ActivityBase {
 
 //             GCDialogCheckBox {
 //                 id: button
+//                 anchors.top: parent.top
 //                 onClicked: piano.useSharpNotation = !piano.useSharpNotation
 //             }
 //             GCText {
 //                 text: qsTr("Change accidental style")
 //             }
-//
+// 
 //             Image {
 //                 source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/playpiano/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/playpiano/resource/blackflat.svg"
 //             }

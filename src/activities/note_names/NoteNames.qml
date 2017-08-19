@@ -62,6 +62,7 @@ ActivityBase {
             property alias bottomNotesRepeater: bottomNotesRepeater
             property alias okButton: okButton
             property alias score: score
+            property string staffLength: "long"
             readonly property string clef: items.bar.level > 10 ? "bass" : "treble"
         }
 
@@ -71,8 +72,8 @@ ActivityBase {
         Rectangle {
             id: instructionBox
             radius: 10
-            width: background.width / 1.9
-            height: horizontalLayout ? background.height / 5 : background.height / 4
+            width: background.width / 1.7
+            height: horizontalLayout ? background.height / 5 : background.height / 5
             anchors.horizontalCenter: parent.horizontalCenter
             opacity: 0.8
             border.width: 6
@@ -246,11 +247,13 @@ ActivityBase {
             clef: bar.level <= 10 ? "treble" : "bass"
             height: background.height / 4
             width: bar.level == 1 || bar.level == 11 ? background.width * 0.8 : background.width / 2
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: bar.level != 11 ? parent.height * 0.35 : parent.height * 0.25
-            anchors.horizontalCenter: bar.level == 1 || bar.level == 11 ? parent.horizontalCenter : undefined
-            anchors.left: parent.left
-            anchors.leftMargin: horizontalLayout ? parent.width * 0.1 : parent.width * 0.05
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: bar.level != 11 ? parent.height * 0.35 : parent.height * 0.25
+                horizontalCenter: bar.level == 1 || bar.level == 11 ? parent.horizontalCenter : undefined
+                left: parent.left
+                leftMargin: horizontalLayout ? parent.width * 0.1 : parent.width * 0.05
+            }
             nbMaxNotesPerStaff: bar.level == 1 || bar.level == 11 ? 8 : 1
             firstNoteX: bar.level == 1 || bar.level == 11 ? width / 5 : width / 2
         }
@@ -299,7 +302,7 @@ ActivityBase {
                 function select() {
                     grid.currentIndex = index
                     var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav'
-                    items.staff.play(noteToPlay)
+                    items.audioEffects.play(noteToPlay)
                 }
               }
             }
@@ -413,10 +416,10 @@ ActivityBase {
             width: Math.min(parent.width,parent.height) * 0.15
             height: Math.min(parent.width,parent.height) * 0.15
             anchors {
-                left: background.left
-                bottom: score.top
+                left: parent.left
+                bottom: parent.bottom
                 topMargin: horizontalLayout ? 0.1 * parent.height : 0.01 * parent.height
-                bottomMargin: 20
+                bottomMargin: parent.height * 0.2
                 leftMargin: 20
             }
             property string currentAnswer: ""
@@ -449,8 +452,11 @@ ActivityBase {
 
         Score {
             id: score
-            anchors.bottom: background.bottom
-            anchors.right: background.right
+            anchors {
+                bottom: parent.bottom
+                right: parent.right
+                bottomMargin: parent.height * 0.2
+            }
             visible: bar.level !== 1 && bar.level !== 11
         }
     }

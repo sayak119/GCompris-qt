@@ -23,8 +23,9 @@
 .import QtQuick 2.0 as Quick
 
 var currentLevel = 0
-var numberOfLevel = 4
+var numberOfLevel = 7
 var items
+var instructions = ["This is the treble cleff staff for high pitched notes", "This is the bass cleff staff for low pitched notes", "Click on the note symbols to write different length notes such as quarter notes, half notes and whole notes", "The black keys are sharp and flat keys, have a # sign.", "Each black key has two names: flat and sharp. Flat notes have b sign","Now you can load music", "Now you can compose your own music"]
 
 function start(items_) {
     items = items_
@@ -40,6 +41,7 @@ function initLevel() {
 }
 
 function nextLevel() {
+    items.staff2.eraseAllNotes()
     if(numberOfLevel <= ++currentLevel ) {
         currentLevel = 0
     }

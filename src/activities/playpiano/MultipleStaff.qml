@@ -40,6 +40,7 @@ Item {
     property bool isMetronomeDisplayed: false
 
     Column {
+        spacing: parent.height * 0.05
         Repeater {
             id: staves
             model: nbStaves

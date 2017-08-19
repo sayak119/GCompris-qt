@@ -137,7 +137,7 @@ Item {
         notes.clear();
     }
 
-    property int noteWidth: (staff.width-10 - clefImage.width) / 10
+    property int noteWidth: (staff.width - 10 - clefImage.width) / 10
     Row {
         id: notesRow
         x: firstNoteX - noteWidth/2
@@ -150,8 +150,16 @@ Item {
                 blackType: mBlackType
                 highlightWhenPlayed: mHighlightWhenPlayed
                 noteIsColored: staff.noteIsColored
-                width: notes.count == 1 ? Math.min(main.width,main.height) * 0.1 : noteWidth
+                width: (notes.count == 1 && items.staffLength === "long") ? Math.min(items.background.width,items.background.height) * 0.1 : noteWidth
                 height: staff.height
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        print(items.staffLength)
+                        print(items.background.width,items.background.height)
+                    }
+                }
 
                 function play() {
                     if(highlightWhenPlayed) {
