@@ -46,6 +46,60 @@ ActivityBase {
             activity.stop.connect(stop)
         }
 
+        Keys.onPressed: {
+            if(event.key === Qt.Key_1) {
+                playNote('1')
+            }
+            if(event.key === Qt.Key_2) {
+                playNote('2')
+            }
+            if(event.key === Qt.Key_3) {
+                playNote('3')
+            }
+            if(event.key === Qt.Key_4) {
+                playNote('4')
+            }
+            if(event.key === Qt.Key_5) {
+                playNote('5')
+            }
+            if(event.key === Qt.Key_6) {
+                playNote('6')
+            }
+            if(event.key === Qt.Key_7) {
+                playNote('7')
+            }
+            if(event.key === Qt.Key_8) {
+                playNote('8')
+            }
+            if(event.key === Qt.Key_F1 && bar.level >= 4) {
+                playNote('-1')
+            }
+            if(event.key === Qt.Key_F2 && bar.level >= 4) {
+                playNote('-2')
+            }
+            if(event.key === Qt.Key_F3 && bar.level >= 4) {
+                playNote('-3')
+            }
+            if(event.key === Qt.Key_F4 && bar.level >= 4) {
+                playNote('-4')
+            }
+            if(event.key === Qt.Key_F5 && bar.level >= 4) {
+                playNote('-5')
+            }
+            if(event.key === Qt.Key_Delete) {
+                staff2.eraseAllNotes()
+            }
+            if(event.key === Qt.Key_Space) {
+                staff2.play()
+            }
+        }
+
+        function playNote(note) {
+            staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
+            var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
+            print("in",noteToPlay)
+            items.audioEffects.play(noteToPlay);
+        }
         // Add here the QML items you need to access in javascript
         QtObject {
             id: items
@@ -65,7 +119,7 @@ ActivityBase {
 
         MultipleStaff {
             id: staff2
-            width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.5
+            width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.4
             height: parent.height * 0.5
             nbStaves: 3
             clef: "bass"
@@ -111,13 +165,13 @@ ActivityBase {
                 anchors.left: parent.left
                 anchors.leftMargin: horizontalLayout ? parent.width * 0.06 : parent.height * 0.01
                 anchors.top: instructionBox.bottom
-                anchors.topMargin: 70
+                anchors.topMargin: parent.height * 0.15
                 blackLabelsVisible: [4, 5, 6, 7, 8].indexOf(items.bar.level) == -1 ? false : true
                 useSharpNotation: bar.level == 5 ? false : true
                 onNoteClicked: {
-                    onlyNote.value = note;
                     staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
                     var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
+                    print(noteToPlay)
                     items.audioEffects.play(noteToPlay);
                 }
                 Note {
@@ -130,10 +184,9 @@ ActivityBase {
 
             Row {
                 id: optionsRow
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.rightMargin: 50
-                spacing: 30
+                anchors.bottom: staff2.top
+                spacing: 15
+                anchors.leftMargin: 15
 
                 Image {
                     id: wholeNote
@@ -198,25 +251,22 @@ ActivityBase {
                     id: openButton
                     source: "qrc:/gcompris/src/activities/playpiano/resource/open.svg"
                     sourceSize.width: 50
-                    MouseArea{
+                    MouseArea {
                         anchors.fill: parent
                         onClicked: loadMelody()
                     }
                 }
-            }
 
-//             GCDialogCheckBox {
-//                 id: button
-//                 anchors.top: parent.top
-//                 onClicked: piano.useSharpNotation = !piano.useSharpNotation
-//             }
-//             GCText {
-//                 text: qsTr("Change accidental style")
-//             }
-// 
-//             Image {
-//                 source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/playpiano/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/playpiano/resource/blackflat.svg"
-//             }
+                Image {
+                    id: changeAccidentalStyleButton
+                    source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/playpiano/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/playpiano/resource/blackflat.svg"
+                    visible: bar.level >= 4
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: piano.useSharpNotation = !piano.useSharpNotation
+                    }
+                }
+            }
 
         function loadMelody() {
             var data = Dataset.get();
