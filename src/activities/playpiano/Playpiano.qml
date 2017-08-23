@@ -97,8 +97,7 @@ ActivityBase {
         function playNote(note) {
             staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
             var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
-            print("in",noteToPlay)
-            items.audioEffects.play(noteToPlay);
+            items.audioEffects.play(noteToPlay)
         }
         // Add here the QML items you need to access in javascript
         QtObject {
@@ -116,13 +115,14 @@ ActivityBase {
         onStop: { Activity.stop() }
 
         property int currentType: 1
+        property string cleffType: bar.level == 2 ? "bass" : "treble"
 
         MultipleStaff {
             id: staff2
             width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.4
             height: parent.height * 0.5
             nbStaves: 3
-            clef: "bass"
+            clef: cleffType == "bass" ? "bass" : "treble"
             nbMaxNotesPerStaff: 8
             noteIsColored: true
             isMetronomeDisplayed: true
@@ -169,11 +169,12 @@ ActivityBase {
                 blackLabelsVisible: [4, 5, 6, 7, 8].indexOf(items.bar.level) == -1 ? false : true
                 useSharpNotation: bar.level == 5 ? false : true
                 onNoteClicked: {
+                    onlyNote.value = note
                     staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
-                    print(noteToPlay)
-                    items.audioEffects.play(noteToPlay);
+                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + cleffType + '_pitches/' + currentType + '/' + note + '.wav';
+                    items.audioEffects.play(noteToPlay)
                 }
+
                 Note {
                     id: onlyNote
                     value: "1"
@@ -186,62 +187,81 @@ ActivityBase {
                 id: optionsRow
                 anchors.bottom: staff2.top
                 spacing: 15
-                anchors.leftMargin: 15
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 Image {
                     id: wholeNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/whole-note.svg"
                     sourceSize.width: 50
                     visible: bar.level == 1 || bar.level == 2 ? false : true
-                    MouseArea{
+                    MouseArea {
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.wholeNote
                     }
                 }
+
                 Image {
                     id: halfNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/half-note.svg"
                     sourceSize.width: 50
                     visible: wholeNote.visible
-                    MouseArea{
+                    MouseArea {
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.halfNote
                     }
                 }
+
                 Image {
                     id: quarterNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/quarter-note.svg"
                     sourceSize.width: 50
                     visible: wholeNote.visible
-                    MouseArea{
+                    MouseArea {
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.quarterNote
                     }
                 }
+
                 Image {
                     id: eighthNote
                     source: "qrc:/gcompris/src/activities/playpiano/resource/eighth-note.svg"
                     sourceSize.width: 50
                     visible: wholeNote.visible
-                    MouseArea{
+                    MouseArea {
                         anchors.fill: parent
                         onClicked: currentType = onlyNote.eighthNote
                     }
                 }
+
                 Image {
                     id: playButton
                     source: "qrc:/gcompris/src/activities/playpiano/resource/play.svg"
-                    sourceSize.width: 75
-                    MouseArea{
+                    sourceSize.width: 50
+                    MouseArea {
                         anchors.fill: parent
                         onClicked: staff2.play()
                     }
                 }
+
+                Image {
+                    id: cleffButton
+                    source: cleffType == "bass" ? "qrc:/gcompris/src/activities/playpiano/resource/bassClefButton.svg" : "qrc:/gcompris/src/activities/playpiano/resource/trebbleClefButton.svg"
+                    sourceSize.width: 50
+                    visible: bar.level > 2
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            staff2.eraseAllNotes()
+                            cleffType = (cleffType == "bass") ? "treble" : "bass"
+                        }
+                    }
+                }
+
                 Image {
                     id: clearButton
                     source: "qrc:/gcompris/src/activities/playpiano/resource/edit-clear.svg"
-                    sourceSize.width: 75
-                    MouseArea{
+                    sourceSize.width: 50
+                    MouseArea {
                         anchors.fill: parent
                         onClicked: staff2.eraseAllNotes()
                     }
@@ -251,6 +271,7 @@ ActivityBase {
                     id: openButton
                     source: "qrc:/gcompris/src/activities/playpiano/resource/open.svg"
                     sourceSize.width: 50
+                    visible: bar.level == 6 || bar.level == 7
                     MouseArea {
                         anchors.fill: parent
                         onClicked: loadMelody()
