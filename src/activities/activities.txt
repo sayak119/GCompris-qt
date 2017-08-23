@@ -102,8 +102,8 @@ numbers-odd-even
 paintings
 penalty
 photo_hunter
+piano_composition
 planegame
-playpiano
 readingh
 readingv
 redraw

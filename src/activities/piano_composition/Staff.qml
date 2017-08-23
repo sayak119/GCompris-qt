@@ -53,7 +53,7 @@ Item {
 
     Image {
         id: clefImage
-        source: clef ? "qrc:/gcompris/src/activities/playpiano/resource/" + clef + "Clef.svg" : ""
+        source: clef ? "qrc:/gcompris/src/activities/piano_composition/resource/" + clef + "Clef.svg" : ""
         sourceSize.width: (nbLines-2)*verticalDistanceBetweenLines
     }
 

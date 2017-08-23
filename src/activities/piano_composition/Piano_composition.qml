@@ -1,4 +1,4 @@
-/* GCompris - playpiano.qml
+/* GCompris - Piano_composition.qml
  *
  * Copyright (C) 2016 Johnny Jazeix <jazeix@gmail.com>
  *
@@ -23,7 +23,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 
 import "../../core"
-import "playpiano.js" as Activity
+import "piano_composition.js" as Activity
 import "melodies.js" as Dataset
 
 ActivityBase {
@@ -96,7 +96,7 @@ ActivityBase {
 
         function playNote(note) {
             staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
-            var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
+            var noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + 'bass' + '_pitches/' + currentType + '/' + note + '.wav';
             items.audioEffects.play(noteToPlay)
         }
         // Add here the QML items you need to access in javascript
@@ -115,14 +115,14 @@ ActivityBase {
         onStop: { Activity.stop() }
 
         property int currentType: 1
-        property string cleffType: bar.level == 2 ? "bass" : "treble"
+        property string clefType: bar.level == 2 ? "bass" : "treble"
 
         MultipleStaff {
             id: staff2
             width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.4
             height: parent.height * 0.5
             nbStaves: 3
-            clef: cleffType == "bass" ? "bass" : "treble"
+            clef: clefType == "bass" ? "bass" : "treble"
             nbMaxNotesPerStaff: 8
             noteIsColored: true
             isMetronomeDisplayed: true
@@ -171,7 +171,7 @@ ActivityBase {
                 onNoteClicked: {
                     onlyNote.value = note
                     staff2.addNote(note, currentType, piano.useSharpNotation ? "sharp" : "flat", false)
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + cleffType + '_pitches/' + currentType + '/' + note + '.wav';
+                    var noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + clefType + '_pitches/' + currentType + '/' + note + '.wav';
                     items.audioEffects.play(noteToPlay)
                 }
 
@@ -191,7 +191,7 @@ ActivityBase {
 
                 Image {
                     id: wholeNote
-                    source: "qrc:/gcompris/src/activities/playpiano/resource/whole-note.svg"
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/whole-note.svg"
                     sourceSize.width: 50
                     visible: bar.level == 1 || bar.level == 2 ? false : true
                     MouseArea {
@@ -202,7 +202,7 @@ ActivityBase {
 
                 Image {
                     id: halfNote
-                    source: "qrc:/gcompris/src/activities/playpiano/resource/half-note.svg"
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/half-note.svg"
                     sourceSize.width: 50
                     visible: wholeNote.visible
                     MouseArea {
@@ -213,7 +213,7 @@ ActivityBase {
 
                 Image {
                     id: quarterNote
-                    source: "qrc:/gcompris/src/activities/playpiano/resource/quarter-note.svg"
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/quarter-note.svg"
                     sourceSize.width: 50
                     visible: wholeNote.visible
                     MouseArea {
@@ -224,7 +224,7 @@ ActivityBase {
 
                 Image {
                     id: eighthNote
-                    source: "qrc:/gcompris/src/activities/playpiano/resource/eighth-note.svg"
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/eighth-note.svg"
                     sourceSize.width: 50
                     visible: wholeNote.visible
                     MouseArea {
@@ -235,7 +235,7 @@ ActivityBase {
 
                 Image {
                     id: playButton
-                    source: "qrc:/gcompris/src/activities/playpiano/resource/play.svg"
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/play.svg"
                     sourceSize.width: 50
                     MouseArea {
                         anchors.fill: parent
@@ -244,22 +244,22 @@ ActivityBase {
                 }
 
                 Image {
-                    id: cleffButton
-                    source: cleffType == "bass" ? "qrc:/gcompris/src/activities/playpiano/resource/bassClefButton.svg" : "qrc:/gcompris/src/activities/playpiano/resource/trebbleClefButton.svg"
+                    id: clefButton
+                    source: clefType == "bass" ? "qrc:/gcompris/src/activities/piano_composition/resource/bassClefButton.svg" : "qrc:/gcompris/src/activities/piano_composition/resource/trebbleClefButton.svg"
                     sourceSize.width: 50
                     visible: bar.level > 2
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
                             staff2.eraseAllNotes()
-                            cleffType = (cleffType == "bass") ? "treble" : "bass"
+                            clefType = (clefType == "bass") ? "treble" : "bass"
                         }
                     }
                 }
 
                 Image {
                     id: clearButton
-                    source: "qrc:/gcompris/src/activities/playpiano/resource/edit-clear.svg"
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/edit-clear.svg"
                     sourceSize.width: 50
                     MouseArea {
                         anchors.fill: parent
@@ -269,7 +269,7 @@ ActivityBase {
 
                 Image {
                     id: openButton
-                    source: "qrc:/gcompris/src/activities/playpiano/resource/open.svg"
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/open.svg"
                     sourceSize.width: 50
                     visible: bar.level == 6 || bar.level == 7
                     MouseArea {
@@ -280,7 +280,7 @@ ActivityBase {
 
                 Image {
                     id: changeAccidentalStyleButton
-                    source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/playpiano/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/playpiano/resource/blackflat.svg"
+                    source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/piano_composition/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/piano_composition/resource/blackflat.svg"
                     visible: bar.level >= 4
                     MouseArea {
                         anchors.fill: parent

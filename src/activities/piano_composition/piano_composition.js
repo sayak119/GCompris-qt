@@ -1,4 +1,4 @@
-/* GCompris - playpiano.js
+/* GCompris - piano_composition.js
  *
  * Copyright (C) 2016 Johnny Jazeix <jazeix@gmail.com>
  *

@@ -65,7 +65,7 @@ Item {
 
     Image {
         id: blackTypeImage
-        source: blackType !== "" ? "qrc:/gcompris/src/activities/playpiano/resource/black" + blackType + ".svg" : ""
+        source: blackType !== "" ? "qrc:/gcompris/src/activities/piano_composition/resource/black" + blackType + ".svg" : ""
         visible: value[0] === '-'
         sourceSize.width: noteImage.width/2.5
         anchors.right: noteImage.left
@@ -77,7 +77,7 @@ Item {
 
     Image {
         id: highlightImage
-        source: "qrc:/gcompris/src/activities/playpiano/resource/note-highlight.svg"
+        source: "qrc:/gcompris/src/activities/piano_composition/resource/note-highlight.svg"
         visible: false
         sourceSize.width: noteImage.width
         height: noteImage.height / 2
@@ -97,7 +97,7 @@ Item {
 
     Image {
         id: noteImage
-        source: "qrc:/gcompris/src/activities/playpiano/resource/" + noteType + "-note.svg"
+        source: "qrc:/gcompris/src/activities/piano_composition/resource/" + noteType + "-note.svg"
         sourceSize.width: 200
         width: note.width
         height: note.height

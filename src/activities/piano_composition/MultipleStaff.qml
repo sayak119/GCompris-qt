@@ -125,7 +125,7 @@ Item {
                 var note = staves.itemAt(currentPlayedStaff).notes.get(currentNote).mValue
 
                 // TODO some notes does not play if they are played in the rcc directly...
-                var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + multipleStaff.clef + '_pitches/' + currentType + '/' + note + '.wav';
+                var noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + multipleStaff.clef + '_pitches/' + currentType + '/' + note + '.wav';
                 items.audioEffects.play(noteToPlay);
                 staves.itemAt(currentPlayedStaff).notesRepeater.itemAt(currentNote).play()
 
