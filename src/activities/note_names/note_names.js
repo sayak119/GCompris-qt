@@ -75,7 +75,7 @@ function initLevel() {
             }
             notesToFind = Core.shuffle(notes);
         }
-        noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
+        noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + items.clef + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
         items.staff.addNote(notesToFind[items.score.currentSubLevel - 1], 4, "", true);
     }
     if(items.bar.level != 1 && items.bar.level != 11)
@@ -110,7 +110,7 @@ function checkAnswer(answer) {
         else {
             items.score.currentSubLevel ++;
             items.staff.eraseAllNotes();
-            noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
+            noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + items.clef + '_pitches/' + '1' + '/' + notesToFind[items.score.currentSubLevel - 1] + '.wav'
             items.staff.play()
             items.staff.addNote(notesToFind[items.score.currentSubLevel - 1], 4, "", true);
         }

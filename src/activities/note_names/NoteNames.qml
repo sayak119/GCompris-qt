@@ -24,7 +24,7 @@ import QtQuick.Controls 1.0
 import GCompris 1.0
 
 import "../../core"
-import "../playpiano"
+import "../piano_composition"
 import "note_names.js" as Activity
 
 ActivityBase {
@@ -148,7 +148,7 @@ ActivityBase {
                 onClicked: {
 //                      items.staff.eraseAllNotes()
 //                     for(var i = 0; i < Activity.bottomNotes.length; i++) {
-//                         var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[i].note + '.wav';
+//                         var noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[i].note + '.wav';
 //                         items.staff.addNote(noteToPlay, 4, "", true);
 //                         items.audioEffects.append(noteToPlay)
 //                     }
@@ -301,7 +301,7 @@ ActivityBase {
 
                 function select() {
                     grid.currentIndex = index
-                    var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav'
+                    var noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + items.clef + '_pitches/' + '1' + '/' + Activity.bottomNotes[index].note + '.wav'
                     items.audioEffects.play(noteToPlay)
                 }
               }
@@ -394,7 +394,7 @@ ActivityBase {
                 }
                     function select() {
                         grid.currentIndex = index
-                        var noteToPlay = 'qrc:/gcompris/src/activities/playpiano/resource/' + items.clef + '_pitches/' + '1' + '/' + note + '.wav'
+                        var noteToPlay = 'qrc:/gcompris/src/activities/piano_composition/resource/' + items.clef + '_pitches/' + '1' + '/' + note + '.wav'
                         items.audioEffects.play(noteToPlay);
                         okButton.currentAnswer = note
                     }
