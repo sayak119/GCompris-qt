@@ -21,6 +21,7 @@
  */
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import GCompris 1.0
 
 import "../../core"
 import "piano_composition.js" as Activity
@@ -109,6 +110,8 @@ ActivityBase {
             property alias bonus: bonus
             property alias staff2: staff2
             property string staffLength: "short"
+            property alias melodyList: melodyList
+            property alias file: file
         }
 
         onStart: { Activity.start(items) }
@@ -117,26 +120,40 @@ ActivityBase {
         property int currentType: 1
         property string clefType: bar.level == 2 ? "bass" : "treble"
 
+        File {
+            id: file
+            onError: console.error("File error: " + msg)
+        }
+
+        MelodyList {
+            id: melodyList
+            onClose: {
+                visible = false
+                piano.enabled = true
+                bar.visible = true
+            }
+        }
+
         MultipleStaff {
             id: staff2
-            width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.4
-            height: parent.height * 0.5
+            width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.8
+            height: horizontalLayout ? parent.height * 0.5 : parent.height * 0.3
             nbStaves: 3
             clef: clefType == "bass" ? "bass" : "treble"
             nbMaxNotesPerStaff: 8
             noteIsColored: true
             isMetronomeDisplayed: true
             anchors.right: parent.right
-            anchors.top: instructionBox.bottom
-            anchors.topMargin: parent.height * 0.13
+            anchors.top: horizontalLayout ? instructionBox.bottom : piano.bottom
+            anchors.topMargin: horizontalLayout ? parent.height * 0.13 : parent.height * 0.05
             anchors.rightMargin: 20
         }
 
         Rectangle {
             id: instructionBox
             radius: 10
-            width: background.width / 1.9
-            height: horizontalLayout ? background.height / 5 : background.height / 4
+            width: horizontalLayout ? background.width / 1.9 : background.width * 0.95
+            height: horizontalLayout ? background.height / 5 : background.height / 9
             anchors.horizontalCenter: parent.horizontalCenter
             opacity: 0.8
             border.width: 6
@@ -160,12 +177,12 @@ ActivityBase {
 
             Piano {
                 id: piano
-                width: horizontalLayout ? parent.width * 0.4 : parent.width * 0.45
-                height: horizontalLayout ? parent.height * 0.45 : parent.width * 0.4
-                anchors.left: parent.left
+                width: horizontalLayout ? parent.width * 0.4 : parent.width * 0.8
+                height: horizontalLayout ? parent.height * 0.45 : parent.width * 0.3
+                anchors.horizontalCenter: horizontalLayout ? undefined : parent.horizontalCenter
+                anchors.left: horizontalLayout ? parent.left : undefined
                 anchors.leftMargin: horizontalLayout ? parent.width * 0.06 : parent.height * 0.01
-                anchors.top: instructionBox.bottom
-                anchors.topMargin: parent.height * 0.15
+                anchors.top: optionsRow.bottom
                 blackLabelsVisible: [4, 5, 6, 7, 8].indexOf(items.bar.level) == -1 ? false : true
                 useSharpNotation: bar.level == 5 ? false : true
                 onNoteClicked: {
@@ -185,7 +202,8 @@ ActivityBase {
 
             Row {
                 id: optionsRow
-                anchors.bottom: staff2.top
+                anchors.top: instructionBox.bottom
+                anchors.topMargin: 10
                 spacing: 15
                 anchors.horizontalCenter: parent.horizontalCenter
 
@@ -274,10 +292,30 @@ ActivityBase {
                     visible: bar.level == 6 || bar.level == 7
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: loadMelody()
+                        onClicked: {
+                            var dataset = Dataset.get()
+                            for(var i = 0; i < dataset.length; i++) {
+                                melodyList.melodiesModel.append(dataset[i])
+                            }
+                            piano.enabled = false
+                            bar.visible = false
+                            melodyList.visible = true
+                        }
                     }
                 }
 
+                Image {
+                    id: saveButton
+                    source: "qrc:/gcompris/src/activities/piano_composition/resource/save.svg"
+                    sourceSize.width: 50
+                    visible: bar.level == 6 || bar.level == 7
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            Activity.saveMelody()
+                        }
+                    }
+                }
                 Image {
                     id: changeAccidentalStyleButton
                     source: piano.useSharpNotation ? "qrc:/gcompris/src/activities/piano_composition/resource/blacksharp.svg" : "qrc:/gcompris/src/activities/piano_composition/resource/blackflat.svg"
@@ -288,12 +326,6 @@ ActivityBase {
                     }
                 }
             }
-
-        function loadMelody() {
-            var data = Dataset.get();
-            var selectedMusic = data.filter(function(item) { return item.title === 'Frère jacques'; });
-            staff2.loadFromData(selectedMusic[0]["melody"]);
-        }
 
         DialogHelp {
             id: dialogHelp

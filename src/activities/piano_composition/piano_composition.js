@@ -21,16 +21,28 @@
  */
 .pragma library
 .import QtQuick 2.0 as Quick
+.import GCompris 1.0 as GCompris
 
 var currentLevel = 0
 var numberOfLevel = 7
 var items
+var userFile = "file://" + GCompris.ApplicationInfo.getSharedWritablePath() + "/" + "piano_composition"
 var instructions = ["This is the treble cleff staff for high pitched notes", "This is the bass cleff staff for low pitched notes", "Click on the note symbols to write different length notes such as quarter notes, half notes and whole notes", "The black keys are sharp and flat keys, have a # sign.", "Each black key has two names: flat and sharp. Flat notes have b sign","Now you can load music", "Now you can compose your own music"]
 
 function start(items_) {
     items = items_
     currentLevel = 0
     initLevel()
+}
+
+function saveMelody() {
+    print(items.staff2.getAllNotes())
+    if (!items.file.exists(userFile)) {
+        if (!items.file.mkpath(userFile))
+            console.error("Could not create directory " + userFile);
+        else
+            console.debug("Created directory " + userFile);
+    }
 }
 
 function stop() {
@@ -49,6 +61,7 @@ function nextLevel() {
 }
 
 function previousLevel() {
+    items.staff2.eraseAllNotes()
     if(--currentLevel < 0) {
         currentLevel = numberOfLevel - 1
     }

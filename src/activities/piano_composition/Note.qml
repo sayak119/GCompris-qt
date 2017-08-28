@@ -77,7 +77,7 @@ Item {
 
     Image {
         id: highlightImage
-        source: "qrc:/gcompris/src/activities/piano_composition/resource/note-highlight.svg"
+        source: "qrc:/gcompris/src/activities/piano_composition/resource/note_highlight.png"
         visible: false
         sourceSize.width: noteImage.width
         height: noteImage.height / 2
@@ -113,7 +113,7 @@ Item {
 
     Timer {
         id: highlightTimer
-        interval: 1500
+        interval: noteDuration
         onRunningChanged: {
             highlightRectangle.visible = running
 //             highlightImage.visible = running

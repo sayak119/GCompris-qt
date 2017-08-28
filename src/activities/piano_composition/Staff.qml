@@ -54,7 +54,7 @@ Item {
     Image {
         id: clefImage
         source: clef ? "qrc:/gcompris/src/activities/piano_composition/resource/" + clef + "Clef.svg" : ""
-        sourceSize.width: (nbLines-2)*verticalDistanceBetweenLines
+        sourceSize.width: (nbLines - 2) * verticalDistanceBetweenLines
     }
 
     Repeater {
@@ -123,8 +123,17 @@ Item {
     }
 
     function addNote(newValue_, newType_, newBlackType_, highlightWhenPlayed_) {
+        var duration
+        if(newType_ == 1)
+            duration = 2000/newType_
+        else if(newType_ == 2)
+            duration = 3000/newType_
+        else if(newType_ == 4)
+            duration = 4000/newType_
+        else
+            duration = 6500/newType_
         notes.append({"mValue": newValue_, "mType": newType_,
-                      "mBlackType": newBlackType_, "mDuration": 2000/newType_,
+                      "mBlackType": newBlackType_, "mDuration": duration,
                       "mHighlightWhenPlayed": highlightWhenPlayed_});
     }
 
@@ -162,9 +171,9 @@ Item {
                 }
 
                 function play() {
-                    if(highlightWhenPlayed) {
+//                     if(highlightWhenPlayed) {
                         highlightTimer.start();
-                    }
+//                     }
                 }
 
                 y: {

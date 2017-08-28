@@ -152,7 +152,7 @@ ActivityBase {
 //                         items.staff.addNote(noteToPlay, 4, "", true);
 //                         items.audioEffects.append(noteToPlay)
 //                     }
-                    items.staff.play()
+                    staff.play()
                 }
             }
             states: [
