@@ -139,7 +139,7 @@ ActivityBase {
             width: horizontalLayout ? parent.width * 0.50 : parent.height * 0.8
             height: horizontalLayout ? parent.height * 0.5 : parent.height * 0.3
             nbStaves: 3
-            clef: clefType == "bass" ? "bass" : "treble"
+            clef: clefType
             nbMaxNotesPerStaff: 8
             noteIsColored: true
             isMetronomeDisplayed: true

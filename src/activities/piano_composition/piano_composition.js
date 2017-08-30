@@ -22,12 +22,19 @@
 .pragma library
 .import QtQuick 2.0 as Quick
 .import GCompris 1.0 as GCompris
+.import "qrc:/gcompris/src/core/core.js" as Core
 
 var currentLevel = 0
 var numberOfLevel = 7
 var items
-var userFile = "file://" + GCompris.ApplicationInfo.getSharedWritablePath() + "/" + "piano_composition"
-var instructions = ["This is the treble cleff staff for high pitched notes", "This is the bass cleff staff for low pitched notes", "Click on the note symbols to write different length notes such as quarter notes, half notes and whole notes", "The black keys are sharp and flat keys, have a # sign.", "Each black key has two names: flat and sharp. Flat notes have b sign","Now you can load music", "Now you can compose your own music"]
+var userDir = "file://" + GCompris.ApplicationInfo.getSharedWritablePath() + "/" + "piano_composition"
+var userFile = "file://" + GCompris.ApplicationInfo.getSharedWritablePath() + "/" + "piano_composition" + "/melodies.json"
+var instructions = ["This is the treble cleff staff for high pitched notes",
+                    "This is the bass cleff staff for low pitched notes",
+                    "Click on the note symbols to write different length notes such as quarter notes, half notes and whole notes", "The black keys are sharp and flat keys, have a # sign.",
+                    "Each black key has two names: flat and sharp. Flat notes have b sign",
+                    "Now you can load music",
+                    "Now you can compose your own music"]
 
 function start(items_) {
     items = items_
@@ -36,12 +43,25 @@ function start(items_) {
 }
 
 function saveMelody() {
-    print(items.staff2.getAllNotes())
-    if (!items.file.exists(userFile)) {
-        if (!items.file.mkpath(userFile))
-            console.error("Could not create directory " + userFile);
+    var notes = items.staff2.getAllNotes()
+    if (!items.file.exists(userDir)) {
+        if (!items.file.mkpath(userDir))
+            console.error("Could not create directory " + userDir);
         else
-            console.debug("Created directory " + userFile);
+            console.debug("Created directory " + userDir);
+    }
+
+    if (!items.file.write(JSON.stringify(notes), userFile)) {
+        Core.showMessageDialog(items.background,
+                               qsTr("Error saving melody to your file (%1)")
+                               .arg(userFile),
+                               "", null, "", null, null);
+    }
+    else {
+        Core.showMessageDialog(items.background,
+                               qsTr("Saved melody to your file (%1)")
+                               .arg(userFile),
+                               "", null, "", null, null);
     }
 }
 
