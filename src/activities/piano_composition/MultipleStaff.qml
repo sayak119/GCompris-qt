@@ -95,8 +95,8 @@ Item {
             var staveNotes = staves.itemAt(i).notes
             for(var j = 0; j < staveNotes.count; j++) {
             melody.push({
-                "type": staves.itemAt(i).notes.get(j).type,
-                "note": staves.itemAt(i).notes.get(j).mValue
+                "type": staveNotes.get(j).type,
+                "note": staveNotes.get(j).mValue
             })
           }
         }

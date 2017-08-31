@@ -171,7 +171,7 @@ ActivityBase {
                 verticalAlignment: Text.AlignVCenter
                 fontSizeMode: Text.Fit
                 wrapMode: Text.WordWrap
-                text: Activity.instructions[bar.level - 1]
+                text: Activity.instructions[bar.level - 1].text
             }
         }
 

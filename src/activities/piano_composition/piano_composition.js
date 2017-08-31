@@ -28,13 +28,30 @@ var currentLevel = 0
 var numberOfLevel = 7
 var items
 var userDir = "file://" + GCompris.ApplicationInfo.getSharedWritablePath() + "/" + "piano_composition"
-var userFile = "file://" + GCompris.ApplicationInfo.getSharedWritablePath() + "/" + "piano_composition" + "/melodies.json"
-var instructions = ["This is the treble cleff staff for high pitched notes",
-                    "This is the bass cleff staff for low pitched notes",
-                    "Click on the note symbols to write different length notes such as quarter notes, half notes and whole notes", "The black keys are sharp and flat keys, have a # sign.",
-                    "Each black key has two names: flat and sharp. Flat notes have b sign",
-                    "Now you can load music",
-                    "Now you can compose your own music"]
+var userFile = userDir + "/melodies.json"
+var instructions = [{
+        "text": qsTr("This is the treble cleff staff for high pitched notes")
+    },
+    {
+        "text": qsTr("This is the bass cleff staff for low pitched notes")
+    },
+    {
+        "text": qsTr("Click on the note symbols to write different length notes such as quarter notes, half notes and whole notes")
+    },
+    {
+        "text": qsTr("The black keys are sharp and flat keys, have a # sign.")
+    },
+    {
+        "text": qsTr("Each black key has two names: flat and sharp. Flat notes have b sign")
+    },
+    {
+        "text": qsTr("Now you can load music")
+
+    },
+    {
+        "text": qsTr("Now you can compose your own music")
+    }
+]
 
 function start(items_) {
     items = items_
@@ -51,22 +68,21 @@ function saveMelody() {
             console.debug("Created directory " + userDir);
     }
 
-    if (!items.file.write(JSON.stringify(notes), userFile)) {
+    var data = items.file.read(userFile)
+    if (!items.file.append(JSON.stringify(notes), userFile)) {
         Core.showMessageDialog(items.background,
-                               qsTr("Error saving melody to your file (%1)")
-                               .arg(userFile),
-                               "", null, "", null, null);
-    }
-    else {
+            qsTr("Error saving melody to your file (%1)")
+            .arg(userFile),
+            "", null, "", null, null);
+    } else {
         Core.showMessageDialog(items.background,
-                               qsTr("Saved melody to your file (%1)")
-                               .arg(userFile),
-                               "", null, "", null, null);
+            qsTr("Saved melody to your file (%1)")
+            .arg(userFile),
+            "", null, "", null, null);
     }
 }
 
-function stop() {
-}
+function stop() {}
 
 function initLevel() {
     items.bar.level = currentLevel + 1
@@ -74,7 +90,7 @@ function initLevel() {
 
 function nextLevel() {
     items.staff2.eraseAllNotes()
-    if(numberOfLevel <= ++currentLevel ) {
+    if(numberOfLevel <= ++currentLevel) {
         currentLevel = 0
     }
     initLevel();
